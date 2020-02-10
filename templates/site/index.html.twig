@@ -1,7 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Bienvenue sur Sortir.com{% endblock %}
+{% block title %}Management des sites{% endblock %}
 
 {% block body %}
+
+    <h1>Gérer les sites</h1>
+    <div class="button-group">
+        <button type="button" class="btn btn-outline-secondary"><a href="{{ path('nouveauSite') }}">Ajouter un site</a>
+        </button>
+        <p>Filtrer les sites</p>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Ville</th>
+            <th scope="col">Code Postal</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for site in sites %}
+            <tr>
+                <th scope="row">{{ site.nom }}</th>
+                <td><a href="{{ path('detailSite', {id:site.id}) }}">{{ site.name }}</a></td>
+                <td>
+                    <button class="delete" value="{{ site.id }}" type="submit" class="btn btn-outline-dark">Supprimer</button>
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script type="text/javascript">
+        $(".delete").click(function () {
+            if (confirm("Etes vous sur de vouloir supprimer ce site ?")) {
+                $.ajax({
+                    url: "/deleteZone/" + $(this).val(),
+                })
+                    .done(function () {
+                        alert("Votre site a bien été effacé !");
+                        location.reload()
+                    })
+            }
+        });
+    </script>
 
 {% endblock %}
