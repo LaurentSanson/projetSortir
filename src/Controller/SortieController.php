@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,10 +36,12 @@ class SortieController extends AbstractController
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()){
             $user = $this->getUser();
             $sortie->setOrganisateur($user);
+            $site = $this->getUser();;
+            $sortie->setSite($site);
             $em->persist($sortie);
             $em->flush();
             $this->addFlash("success", "Votre sortie a bien été ajoutée !");
-            return $this->redirectToRoute('detailEmployee', array('id'=>$sortie->getId()));
+            return $this->redirectToRoute('detailSortie', array('id'=>$sortie->getId()));
         }
         return $this->render('sortie/ajouter.html.twig', [
             'sortieForm' => $sortieForm->createView()

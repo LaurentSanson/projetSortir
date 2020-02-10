@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme siteForm 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block title %}Ajouter un site{% endblock %}
+
+{% block body %}
+
+    <h3>Ajouter un site</h3>
+    <div>
+        {{ form_start(siteForm) }}
+        {{ form_widget(siteForm) }}
+        <button type="submit">Valider</button>
+        {{ form_end(siteForm) }}
+    </div>
+
+{% endblock %}
