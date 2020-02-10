@@ -3,11 +3,9 @@
 namespace App\Controller;
 
 use App\Form\ParticipantType;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,12 +43,10 @@ class ParticipantController extends AbstractController
      * @Route("/modifierProfil", name="modifierProfil")
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
-     * @param EntityManager $entityManager
-     * @return Response
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse|Response
      */
-    public function modifierProfil(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManager $entityManager)
+    public function modifierProfil(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
 
         $participant = $this->getUser();
@@ -59,10 +55,14 @@ class ParticipantController extends AbstractController
 
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $password2 = $form->get('password2')->getViewData();
+            dump($password2);
+            die();
+
             $hash = $passwordEncoder->encodePassword($participant, $participant->getPassword());
+
 
             $participant->setPassword($hash);
 
@@ -70,15 +70,12 @@ class ParticipantController extends AbstractController
 
             $this->addFlash("success", "Inscription OK !");
 
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('profil');
 
         }
 
         return $this->render('security/index.html.twig', [
             'form'=> $form->createView()
         ]);
-
-
     }
-
 }
