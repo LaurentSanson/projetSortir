@@ -55,22 +55,30 @@ class ParticipantController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid())  {
 
-            $password2 = $form->get('password2')->getViewData();
-            dump($password2);
-            die();
+            $password = $form->get('newPassword')->getViewData();
+            $password2 = $form->get('newPassword2')->getViewData();
 
-            $hash = $passwordEncoder->encodePassword($participant, $participant->getPassword());
+            if ($password == $password2){
+
+                $participant->setPassword($password);
+
+                $hash = $passwordEncoder->encodePassword($participant, $participant->getPassword());
+
+                $participant->setPassword($hash);
+
+                $entityManager->flush();
+
+                $this->addFlash("success", "Inscription OK !");
+
+                return $this->redirectToRoute('profil');
+            }else {
+                $this->addFlash("alert-danger", "Mot de passe pas identique !");
+            }
 
 
-            $participant->setPassword($hash);
 
-            $entityManager->flush();
-
-            $this->addFlash("success", "Inscription OK !");
-
-            return $this->redirectToRoute('profil');
 
         }
 

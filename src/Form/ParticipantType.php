@@ -16,8 +16,12 @@ class ParticipantType extends AbstractType
         $builder
             ->add('pseudo')
 //            ->add('roles')
-            ->add('password', PasswordType::class)
-            ->add('password2', PasswordType::class, [
+//            ->add('password', PasswordType::class)
+            ->add('newPassword', PasswordType::class, [
+                'label'=>'Password',
+                'mapped'=> false
+            ])
+            ->add('newPassword2', PasswordType::class, [
                 'label'=>'Confirmation',
                 'mapped'=> false
             ])
