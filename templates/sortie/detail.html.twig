@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Details</h1>
+    <div class="card text-center">
+       Nom de la sortie : {{ sortie.nom }}
+       Date et heure de la sortie : {{ sortie.dateDebut }}
+       Date limite d'inscription : {{ sortie.dateCloture }}
+       Nombre de places : {{ sortie.nbInscriptionsMax }}
+       Durée : {{ sortie.duree }} minutes
+       Description et infos : {{ sortie.descriptionInfos }}
+    </div>
+    <div class="card text-center">
+       Lieu : {{ sortie.lieu }}
+       Rue : {{ sortie.lieu.rue }}
+       Ville : {{ sortie.lieu.ville }}
+       Code Postal : {{ sortie.lieu.ville.codePostal }}
+       Latitude : {{ sortie.lieu.latitude }}
+       Longitude : {{ sortie.lieu.longitute }}
+    </div>
+{% endblock %}

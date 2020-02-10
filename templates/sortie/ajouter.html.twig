@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme sortieForm 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block title %}Ajouter une sortie{% endblock %}
+
+{% block body %}
+
+    <h3>Ajouter une sortie</h3>
+    <div>
+        {{ form_start(sortieForm) }}
+        {{ form_widget(sortieForm) }}
+        <button type="submit">Valider</button>
+        <button type="submit"><a href="{{ path('nouveauLieu') }}">Ajouter un lieu</a></button>
+        {{ form_end(sortieForm) }}
+    </div>
+
+{% endblock %}

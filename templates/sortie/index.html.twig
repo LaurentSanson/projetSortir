@@ -1,20 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello SortieController!{% endblock %}
+{% block title %}Bienvenue sur Sortir.com{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Gérer les sorties</h1>
+    <div class="button-group">
+        <button type="button" class="btn btn-outline-secondary"><a href="{{ path('nouvelleSortie') }}">Ajouter une sortie</a>
+        </button>
+        <p>Filtrer les sorties</p>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Nom de la sortie</th>
+            <th scope="col">Date de la sortie</th>
+            <th scope="col">Clôture</th>
+            <th scope="col">Inscrits/Places</th>
+            <th scope="col">Etat</th>
+            <th scope="col">Inscrit</th>
+            <th scope="col">Organisateur</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/lsanson2019/Desktop/projetSortir/src/Controller/SortieController.php'|file_link(0) }}">src/Controller/SortieController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/lsanson2019/Desktop/projetSortir/templates/sortie/index.html.twig'|file_link(0) }}">templates/sortie/index.html.twig</a></code></li>
-    </ul>
-</div>
+        {% for sortie in sorties %}
+            <tr>
+                <th scope="row">{{ sortie.nom }}</th>
+                <th scope="row">{{ sortie.dateDebut }}</th>
+                <th scope="row">{{ sortie.dateCloture }}</th>
+                <th scope="row">{{ sortie.nbInscriptionsMax }}</th>
+                <th scope="row">{{ sortie.etat }}</th>
+                <th scope="row">X</th>
+                <th scope="row">{{ sortie.organisateur }}</th>
+                <td><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.name }}</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script type="text/javascript">
+        $(".delete").click(function () {
+            if (confirm("Etes vous sur de vouloir supprimer cette ville ?")) {
+                $.ajax({
+                    url: "/deleteZone/" + $(this).val(),
+                })
+                    .done(function () {
+                        alert("Votre ville a bien été effacée !");
+                        location.reload()
+                    })
+            }
+        });
+    </script>
+
 {% endblock %}

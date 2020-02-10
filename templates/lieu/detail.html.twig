@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Details</h1>
+    <div class="card text-center">
+       Lieu : {{ lieu.nom }}
+       Rue : {{ lieu.rue }}
+       Ville : {{ lieu.ville }}
+       Code Postal : {{ lieu.ville.codePostal }}
+       Latitude : {{ lieu.latitude }}
+       Longitude : {{ lieu.longitute }}
+    </div>
+{% endblock %}

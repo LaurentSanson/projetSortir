@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme villeForm 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block title %}Ajouter une ville{% endblock %}
+
+{% block body %}
+
+    <h3>Ajouter une ville</h3>
+    <div>
+        {{ form_start(villeForm) }}
+        {{ form_widget(villeForm) }}
+        <button type="submit">Valider</button>
+        {{ form_end(villeForm) }}
+    </div>
+
+{% endblock %}

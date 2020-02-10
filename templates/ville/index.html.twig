@@ -1,20 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello VilleController!{% endblock %}
+{% block title %}Management des villes{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Gérer les villes</h1>
+    <div class="button-group">
+        <button type="button" class="btn btn-outline-secondary"><a href="{{ path('nouvelleVille') }}">Ajouter une ville</a>
+        </button>
+        <p>Filtrer les villes</p>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Ville</th>
+            <th scope="col">Code Postal</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/lsanson2019/Desktop/projetSortir/src/Controller/VilleController.php'|file_link(0) }}">src/Controller/VilleController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/lsanson2019/Desktop/projetSortir/templates/ville/index.html.twig'|file_link(0) }}">templates/ville/index.html.twig</a></code></li>
-    </ul>
-</div>
+        {% for ville in villes %}
+            <tr>
+                <th scope="row">{{ ville.nom }}</th>
+                <td><a href="{{ path('detailLieu', {id:ville.id}) }}">{{ ville.name }}</a></td>
+                <td>
+                    <button class="delete" value="{{ ville.id }}" type="submit" class="btn btn-outline-dark">Supprimer</button>
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script type="text/javascript">
+        $(".delete").click(function () {
+            if (confirm("Etes vous sur de vouloir supprimer cette ville ?")) {
+                $.ajax({
+                    url: "/deleteZone/" + $(this).val(),
+                })
+                    .done(function () {
+                        alert("Votre ville a bien été effacée !");
+                        location.reload()
+                    })
+            }
+        });
+    </script>
+
 {% endblock %}
