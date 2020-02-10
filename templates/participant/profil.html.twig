@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+<div class="container">
+    <div>
+        <h1> {{ participant.pseudo }}</h1>
+        <h3>Prénom : {{ participant.prenom }}</h3>
+        <h3>Nom : {{ participant.nom }}</h3>
+        <h3>Téléphone : {{ participant.telephone }}</h3>
+        <h3>Email : {{ participant.mail }}</h3>
+        <h3>Site de rattachement : {{ participant.site }}</h3>
+        <a href="{{ path("modifierProfil") }}">
+            <button type="button" class="btn btn-outline-secondary">modifier</button>
+        </a>
+
+</div>
+{% endblock %}

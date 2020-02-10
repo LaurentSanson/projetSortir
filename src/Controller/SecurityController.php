@@ -26,14 +26,16 @@ class SecurityController extends AbstractController
         $participant = new  Participant();
         $form = $this->createForm(ParticipantType::class, $participant);
 
+        $form->handleRequest($request);
 
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $hash = $passwordEncoder->encodePassword($participant, $participant->getPassword());
-            $participant->setPassword($hash);
 
+            $participant->setPassword($hash);
             $participant->setRoles(['ROLE_USER']);
+            $participant->setActif(true);
 
             $entityManager->persist($participant);
             $entityManager->flush();
@@ -52,6 +54,8 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/login", name="app_login")
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
