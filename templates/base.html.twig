@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <title>{% block title %}Sortir{% endblock %}</title>
     {% block stylesheets %}{% endblock %}
 </head>
@@ -21,12 +22,12 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
-                {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                {% if not is_granted('ROLE_USER') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path("app_login") }}">Connection</a>
                 </li>
                 {% endif %}
-                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                {% if is_granted('ROLE_USER') %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ path("security") }}"> Enregistrement </a>
                 </li>
@@ -35,14 +36,15 @@
                 </li>
                 {% endif %}
 
-                {% if app.user %}
-                    <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('app_logout') }}">{{ app.user.username }} - Déconnection</a>
-                    </li>
-                {% endif %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ path("sortie") }}"> Sortie </a>
                 </li>
+
+                {% if app.user %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('app_logout') }}">{{ app.user.username }} - Déconnection</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </nav>

@@ -19,7 +19,7 @@ class ParticipantController extends AbstractController
      */
     public function index()
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         return $this->render('participant/index.html.twig', [
             'controller_name' => 'ParticipantController',
@@ -35,7 +35,7 @@ class ParticipantController extends AbstractController
     public function profil(EntityManagerInterface $entityManager, Request $request)
     {
 
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         $participant = $this->getUser();
 
@@ -54,7 +54,7 @@ class ParticipantController extends AbstractController
     public function modifierProfil(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
 
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         $participant = $this->getUser();
 
