@@ -1,3 +1,14 @@
 .auth{
     width: 50%;
 }
+
+.detail{
+    float: left;
+    width: 400px;
+    height: auto;
+    margin: 1em;
+}
+
+.after-detail {
+    clear: left;
+}
