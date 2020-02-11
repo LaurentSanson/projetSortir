@@ -19,21 +19,22 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
-    public function search($search, $order)
+    public function search($search, $order, $checkbox1, $user)
     {
         $qb = $this->createQueryBuilder('i')
             ->Where('i.nom LIKE :search')
             ->setParameter('search', "%".$search."%")
-            ->orderBy('i.'.$order, 'asc')
-        ;
+            ->orderBy('i.'.$order, 'asc');
+
+        if($checkbox1 == "ON"){
+            $qb->andWhere('i.organisateur = :true')
+                ->setParameter('true', $user);
+        }
+
         $query = $qb->getQuery();
         return $query->getResult();
     }
 
-    public function filtreOrganisateur(){
-        return $this->createQueryBuilder('user')
-            ->andWhere('user.id = user.organisateur');
-    }
 
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects

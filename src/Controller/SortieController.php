@@ -27,13 +27,20 @@ class SortieController extends AbstractController
      */
     public function index(EntityManagerInterface $em, Request $request, $orderParam = 'id')
     {
+        $user = $this->getUser();
+        $site = $request->get('site');
         $search = $request->get('search');
+        $checkbox1 = $request->get('checkbox1');
+        $checkbox2 = $request->get('checkbox2');
+        $checkbox3 = $request->get('checkbox3');
+        $checkbox4 = $request->get('checkbox4');
 
-        $sorties = $em->getRepository(Sortie::class)->search($search, $orderParam);
+
+        $sorties = $em->getRepository(Sortie::class)->search($search, $orderParam, $checkbox1, $user);
         $sites = $em->getRepository(Site::class)->findAll();
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
-            'sites' => $sites
+            'sites' => $sites,
         ]);
     }
 
@@ -59,7 +66,7 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('detailSortie', array('id' => $sortie->getId()));
         }
         return $this->render('sortie/ajouter.html.twig', [
-            'sortieForm' => $sortieForm->createView()
+            'sortieForm' => $sortieForm->createView(),
         ]);
     }
 
