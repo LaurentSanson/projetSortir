@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SortieController extends AbstractController
 {
     /**
+     * @Route("/sortieTriee/{orderParam}", name="sortieTriee")
      * @Route("/sortie", name="sortie")
      */
     public function index(EntityManagerInterface $em, Request $request, $orderParam = 'id')

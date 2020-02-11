@@ -15,3 +15,13 @@
     </div>
 
 {% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        var ville = document.getElementById("nom");
+
+        ajaxGet("https://geo.api.gouv.fr/communes?nom=Nantes&fields=departement&boost=population&limit=5", function (response) {
+           var ville = JSON.parse(response);
+        });
+    </script>
+{% endblock %}

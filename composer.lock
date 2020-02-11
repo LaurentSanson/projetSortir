@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e0ea9f5c4ff26505980073958785f8fd",
+    "content-hash": "2ffe5a08fa22ba608238bdcf9c38a002",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1247,6 +1247,37 @@
                 "sql"
             ],
             "time": "2014-01-12T16:20:24+00:00"
+        },
+        {
+            "name": "kylekatarnls/vicopo",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kylekatarnls/vicopo.git",
+                "reference": "c0d851c716c9f67a948dd2ea338e881145be7daf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kylekatarnls/vicopo/zipball/c0d851c716c9f67a948dd2ea338e881145be7daf",
+                "reference": "c0d851c716c9f67a948dd2ea338e881145be7daf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Vicopo\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "API HTTP et Script pour trouver les villes à partir d'un code postal et code postaux à partir d'une ville",
+            "homepage": "https://vicopo.selfbuild.fr",
+            "time": "2019-01-16T10:04:15+00:00"
         },
         {
             "name": "monolog/monolog",

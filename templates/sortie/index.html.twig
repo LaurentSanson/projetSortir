@@ -11,7 +11,7 @@
         </button>
         <p>Filtrer les sorties</p>
     </div>
-    <form method="get">
+    <form method="get" action="{{ path('sortieTriee') }}">
         <div class="menuGauche">
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Site</label>
@@ -23,7 +23,7 @@
             </div>
             <div>
                 <label for="exampleFormControlSelect1">Le nom de la sortie contient :</label>
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search"
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" value=""
                        aria-label="Search">
             </div>
             <div>
@@ -35,20 +35,20 @@
         </div>
         <div class="menuDroite">
             <div class="checkbox">
-                <label><input type="checkbox" value="">Sorties dont je suis l'organisateur/trice</label>
+                <label><input type="checkbox" value=""><a href="{{ path('sortieTriee', {'orderParam': 'organisateur'}) }}">Sorties dont je suis l'organisateur/trice</a></label>
             </div>
             <div class="checkbox">
-                <label><input type="checkbox" value="">Sorties auxquelles je suis inscrit/e</label>
+                <label><input type="checkbox" value=""><a href="{{ path('sortieTriee', {'orderParam': 'organisateur'}) }}">Sorties auxquelles je suis inscrit/e</a></label>
             </div>
             <div class="checkbox">
-                <label><input type="checkbox" value="">Sorties auxquelles je ne suis pas inscrit/e</label>
+                <label><input type="checkbox" value=""><a href="{{ path('sortieTriee', {'orderParam': 'organisateur'}) }}">Sorties auxquelles je ne suis pas inscrit/e</a></label>
             </div>
             <div class="checkbox">
-                <label><input type="checkbox" value="">Sorties passées</label>
+                <label><input type="checkbox" value=""><a href="{{ path('sortieTriee', {'orderParam': 'dateDebut'}) }}">Sorties passées</a></label>
             </div>
 
             <div>
-                <button type="submit"><a href="{{ path('sortie') }}">Rechercher</a></button>
+                <button type="submit">Rechercher</button>
             </div>
         </div>
     </form>
@@ -66,7 +66,7 @@
         </tr>
         </thead>
         <tbody>
-        
+
         {% for sortie in sorties %}
             <tr>
                 <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>

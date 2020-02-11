@@ -30,6 +30,11 @@ class SortieRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function filtreOrganisateur(){
+        return $this->createQueryBuilder('user')
+            ->andWhere('user.id = user.organisateur');
+    }
+
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects
     //  */
