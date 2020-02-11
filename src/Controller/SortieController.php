@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Participant;
+use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,8 +22,10 @@ class SortieController extends AbstractController
     {
         $sortieRepository = $em->getRepository(Sortie::class);
         $sorties = $sortieRepository->findAll();
+        $sites = $em->getRepository(Site::class)->findAll();
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
+            'sites' => $sites
         ]);
     }
 
@@ -33,11 +37,14 @@ class SortieController extends AbstractController
         $sortie = new Sortie();
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
+
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()){
             $user = $this->getUser();
+            $site = $this->getUser()->getSite();
+            $etat = $em->getRepository(Etat::class)->find(2);
             $sortie->setOrganisateur($user);
-            $site = $this->getUser();;
             $sortie->setSite($site);
+            $sortie->setEtat($etat);
             $em->persist($sortie);
             $em->flush();
             $this->addFlash("success", "Votre sortie a bien été ajoutée !");

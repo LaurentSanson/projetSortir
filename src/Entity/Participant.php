@@ -82,6 +82,11 @@ class Participant implements UserInterface
         $this->organisateurSortie = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+       return $this->pseudo;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
