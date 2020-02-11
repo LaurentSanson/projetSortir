@@ -20,15 +20,25 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
+                {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path("app_login") }}">Connection</a>
                 </li>
+                {% endif %}
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ path("security") }}"> Enregistrement </a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ path("profil") }}"> Mon profil </a>
                 </li>
+                {% endif %}
+
+                {% if app.user %}
+                    <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('app_logout') }}">{{ app.user.username }} - Déconnection</a>
+                    </li>
+                {% endif %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ path("sortie") }}"> Sortie </a>
                 </li>

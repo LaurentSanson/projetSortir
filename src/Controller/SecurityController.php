@@ -21,34 +21,44 @@ class SecurityController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function registration(UserPasswordEncoderInterface $passwordEncoder,EntityManagerInterface $entityManager, Request $request)
+    public function registration(UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager, Request $request)
     {
         $participant = new  Participant();
         $form = $this->createForm(ParticipantType::class, $participant);
 
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $hash = $passwordEncoder->encodePassword($participant, $participant->getPassword());
+            $password = $form->get('newPassword')->getViewData();
+            $password2 = $form->get('newPassword2')->getViewData();
 
-            $participant->setPassword($hash);
-            $participant->setRoles(['ROLE_USER']);
-            $participant->setActif(true);
+            if ($password == $password2) {
 
-            $entityManager->persist($participant);
-            $entityManager->flush();
+                $participant->setPassword($password);
 
-            $this->addFlash("success", "Inscription OK !");
+                $hash = $passwordEncoder->encodePassword($participant, $participant->getPassword());
 
-            return $this->redirectToRoute('app_login');
+                $participant->setPassword($hash);
+                $participant->setRoles(['ROLE_USER']);
+                $participant->setActif(true);
 
+                $entityManager->persist($participant);
+                $entityManager->flush();
+
+                $this->addFlash("success", "Inscription OK !");
+
+                return $this->redirectToRoute('app_login');
+
+            } else {
+                $this->addFlash("alert-danger", "Mot de passe pas identique !");
+            }
         }
 
         return $this->render('security/index.html.twig', [
-            'form'=> $form->createView()
+            'form' => $form->createView()
         ]);
+
 
     }
 
@@ -57,7 +67,8 @@ class SecurityController extends AbstractController
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public
+    function login(AuthenticationUtils $authenticationUtils): Response
     {
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
@@ -74,7 +85,8 @@ class SecurityController extends AbstractController
     /**
      * @Route("/logout", name="app_logout")
      */
-    public function logout()
+    public
+    function logout()
     {
         throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }

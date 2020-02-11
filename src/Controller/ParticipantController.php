@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Participant;
 use App\Form\ParticipantType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +19,8 @@ class ParticipantController extends AbstractController
      */
     public function index()
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         return $this->render('participant/index.html.twig', [
             'controller_name' => 'ParticipantController',
         ]);
@@ -31,6 +34,8 @@ class ParticipantController extends AbstractController
      */
     public function profil(EntityManagerInterface $entityManager, Request $request)
     {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $participant = $this->getUser();
 
@@ -49,41 +54,57 @@ class ParticipantController extends AbstractController
     public function modifierProfil(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
 
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $participant = $this->getUser();
 
         $form = $this->createForm(ParticipantType::class, $participant);
-
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid())  {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $password = $form->get('newPassword')->getViewData();
             $password2 = $form->get('newPassword2')->getViewData();
 
-            if ($password == $password2){
+            $testPseudo = $participant->getPseudo();
 
-                $participant->setPassword($password);
+            //recherche si pseudo identique dans la BD
+            $repository = $entityManager->getRepository(Participant::class);
+            $testParticipant = $repository->findOneBy(
+                ['pseudo' => $testPseudo]
+            );
 
-                $hash = $passwordEncoder->encodePassword($participant, $participant->getPassword());
 
-                $participant->setPassword($hash);
-
-                $entityManager->flush();
-
-                $this->addFlash("success", "Inscription OK !");
-
-                return $this->redirectToRoute('profil');
-            }else {
-                $this->addFlash("alert-danger", "Mot de passe pas identique !");
+            if ($testParticipant->getId() == $participant->getId()){
+                $testParticipant = null;
             }
 
+            if ($testParticipant != null) {
+                $this->addFlash("alert-danger", "Pseudo déja utilisé");
+            } else {
+                if ($password == $password2) {
 
+                    $participant->setPassword($password);
+
+                    $hash = $passwordEncoder->encodePassword($participant, $participant->getPassword());
+
+                    $participant->setPassword($hash);
+
+                    $entityManager->flush();
+
+                    $this->addFlash("success", "Inscription OK !");
+
+                    return $this->redirectToRoute('profil');
+                } else {
+                    $this->addFlash("alert-danger", "Mot de passe pas identique !");
+                }
+            }
 
 
         }
 
         return $this->render('security/index.html.twig', [
-            'form'=> $form->createView()
+            'form' => $form->createView()
         ]);
     }
 }
