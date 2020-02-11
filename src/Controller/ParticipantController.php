@@ -3,11 +3,9 @@
 namespace App\Controller;
 
 use App\Form\ParticipantType;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,12 +43,10 @@ class ParticipantController extends AbstractController
      * @Route("/modifierProfil", name="modifierProfil")
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
-     * @param EntityManager $entityManager
-     * @return Response
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse|Response
      */
-    public function modifierProfil(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManager $entityManager)
+    public function modifierProfil(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
 
         $participant = $this->getUser();
@@ -59,26 +55,35 @@ class ParticipantController extends AbstractController
 
         $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid())  {
 
-        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $form->get('newPassword')->getViewData();
+            $password2 = $form->get('newPassword2')->getViewData();
 
-            $hash = $passwordEncoder->encodePassword($participant, $participant->getPassword());
+            if ($password == $password2){
 
-            $participant->setPassword($hash);
+                $participant->setPassword($password);
 
-            $entityManager->flush();
+                $hash = $passwordEncoder->encodePassword($participant, $participant->getPassword());
 
-            $this->addFlash("success", "Inscription OK !");
+                $participant->setPassword($hash);
 
-            return $this->redirectToRoute('app_login');
+                $entityManager->flush();
+
+                $this->addFlash("success", "Inscription OK !");
+
+                return $this->redirectToRoute('profil');
+            }else {
+                $this->addFlash("alert-danger", "Mot de passe pas identique !");
+            }
+
+
+
 
         }
 
         return $this->render('security/index.html.twig', [
             'form'=> $form->createView()
         ]);
-
-
     }
-
 }
