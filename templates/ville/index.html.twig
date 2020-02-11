@@ -23,7 +23,7 @@
         {% for ville in villes %}
             <tr>
                 <th scope="row">{{ ville.nom }}</th>
-                <td><a href="{{ path('detailLieu', {id:ville.id}) }}">{{ ville.name }}</a></td>
+                <td><a href="{{ path('detailLieu', {id:ville.id}) }}">{{ ville.nom }}</a></td>
                 <td>
                     <button class="delete" value="{{ ville.id }}" type="submit" class="btn btn-outline-dark">Supprimer</button>
                 </td>

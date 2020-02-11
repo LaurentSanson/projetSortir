@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SortieController extends AbstractController
 {
     /**
+     * @Route("/sortieTriee/{orderParam}", name="sortieTriee")
      * @Route("/sortie", name="sortie")
      * @param EntityManagerInterface $em
      * @param Request $request
