@@ -1,0 +1,13 @@
+.menuGauche{
+    width: 45%;
+    display: inline-block;
+}
+.menuDroite{
+    width: 35%;
+    display: inline-block;
+    margin-left: 10%;
+}
+
+.table{
+    margin-top: 5%;
+}

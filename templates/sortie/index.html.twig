@@ -6,22 +6,52 @@
 
     <h1>Gérer les sorties</h1>
     <div class="button-group">
-        <button type="button" class="btn btn-outline-secondary"><a href="{{ path('nouvelleSortie') }}">Ajouter une sortie</a>
+        <button type="button" class="btn btn-outline-secondary"><a href="{{ path('nouvelleSortie') }}">Ajouter une
+                sortie</a>
         </button>
         <p>Filtrer les sorties</p>
     </div>
-    <div class="form-group">
-        <label for="exampleFormControlSelect1">Site</label>
-        <select class="form-control" id="exampleFormControlSelect1">
-            {% for site in sites %}
-            <option>{{ site.nom }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <label for="exampleFormControlSelect1">Le nom de la sortie contient :</label>
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" aria-label="Search">
-    </div>
+    <form method="get">
+        <div class="menuGauche">
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Site</label>
+                <select class="form-control" id="exampleFormControlSelect1">
+                    {% for site in sites %}
+                        <option>{{ site.nom }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="exampleFormControlSelect1">Le nom de la sortie contient :</label>
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search"
+                       aria-label="Search">
+            </div>
+            <div>
+                <label for="exampleFormControlSelect1">Entre </label>
+                <input class="form-control mr-sm-2" type="date">
+                <label for="exampleFormControlSelect1">Et </label>
+                <input class="form-control mr-sm-2" type="date">
+            </div>
+        </div>
+        <div class="menuDroite">
+            <div class="checkbox">
+                <label><input type="checkbox" value="">Sorties dont je suis l'organisateur/trice</label>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" value="">Sorties auxquelles je suis inscrit/e</label>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" value="">Sorties auxquelles je ne suis pas inscrit/e</label>
+            </div>
+            <div class="checkbox">
+                <label><input type="checkbox" value="">Sorties passées</label>
+            </div>
+
+            <div>
+                <button type="submit"><a href="{{ path('sortie') }}">Rechercher</a></button>
+            </div>
+        </div>
+    </form>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -36,7 +66,7 @@
         </tr>
         </thead>
         <tbody>
-
+        
         {% for sortie in sorties %}
             <tr>
                 <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>
@@ -46,7 +76,9 @@
                 <th scope="row">{{ sortie.etat }}</th>
                 <th scope="row">X</th>
                 <th scope="row"><a href="{{ path('profil', {id:sortie.id}) }}">{{ sortie.organisateur }}</a></th>
-                <td><a href="#" onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a></td>
+                <td><a href="#"
+                       onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
