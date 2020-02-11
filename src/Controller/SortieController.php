@@ -83,8 +83,8 @@ class SortieController extends AbstractController
                     $miseEnForme = 2;
                 }
             }
-            if ($sortie->getNbInscriptionsMax() == 0 ){
-                $miseEnForme = 2;
+            if ($sortie->getNbInscriptionsMax() == 0 && $miseEnForme != 2) {
+                $miseEnForme = 1;
             }
         }
 
@@ -150,8 +150,6 @@ class SortieController extends AbstractController
 
             return $this->redirectToRoute('detailSortie', ['id' => $id]);
         }
-
-
     }
 
     /**
@@ -166,18 +164,15 @@ class SortieController extends AbstractController
         $repo = $entityManager->getRepository(Sortie::class);
         $sortie = $repo->find($id);
 
-        if ($sortie->getNbInscriptionsMax() == 0) {
-            return $this->redirectToRoute('detailSortie', ['id' => $id]);
-        } else {
-            $sortie->setNbInscriptionsMax($sortie->getNbInscriptionsMax() + 1);
+        $sortie->setNbInscriptionsMax($sortie->getNbInscriptionsMax() + 1);
 
-            $user->removeSortie($sortie);
+        $user->removeSortie($sortie);
 
-            $entityManager->flush();
+        $entityManager->flush();
 
-            $this->addFlash("success", "dé-inscription OK");
+        $this->addFlash("success", "dé-inscription OK");
 
-            return $this->redirectToRoute('detailSortie', ['id' => $id]);
-        }
+        return $this->redirectToRoute('detailSortie', ['id' => $id]);
+
     }
 }
