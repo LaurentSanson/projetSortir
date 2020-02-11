@@ -20,7 +20,7 @@
     </div>
     <div>
         <label for="exampleFormControlSelect1">Le nom de la sortie contient :</label>
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" aria-label="Search">
     </div>
     <table class="table table-hover">
         <thead>
@@ -45,8 +45,8 @@
                 <th scope="row">{{ sortie.nbInscriptionsMax }}</th>
                 <th scope="row">{{ sortie.etat }}</th>
                 <th scope="row">X</th>
-                <th scope="row">{{ sortie.organisateur }}</th>
-                <td><a href="{{ path('detailSortie', {id:sortie.id}) }}">Supprimer</a></td>
+                <th scope="row"><a href="{{ path('profil', {id:sortie.id}) }}">{{ sortie.organisateur }}</a></th>
+                <td><a href="#" onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a></td>
             </tr>
         {% endfor %}
         </tbody>

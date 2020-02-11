@@ -18,10 +18,11 @@ class SortieController extends AbstractController
     /**
      * @Route("/sortie", name="sortie")
      */
-    public function index(EntityManagerInterface $em)
+    public function index(EntityManagerInterface $em, Request $request, $orderParam = 'id')
     {
-        $sortieRepository = $em->getRepository(Sortie::class);
-        $sorties = $sortieRepository->findAll();
+        $search = $request->get('search');
+
+        $sorties = $em->getRepository(Sortie::class)->search($search, $orderParam);
         $sites = $em->getRepository(Site::class)->findAll();
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
@@ -74,7 +75,7 @@ class SortieController extends AbstractController
 
     /**
      *
-     * @Route("/effacer/{id}", name="effacer")
+     * @Route("/effacer/{id}", name="effacerSortie")
      */
     public function delete(EntityManagerInterface $em, $id)
     {
