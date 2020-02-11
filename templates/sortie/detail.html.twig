@@ -4,8 +4,8 @@
     <h1>Details</h1>
     <div class="card text-center">
        Nom de la sortie : {{ sortie.nom }}
-       Date et heure de la sortie : {{ sortie.dateDebut }}
-       Date limite d'inscription : {{ sortie.dateCloture }}
+       Date et heure de la sortie : {{ sortie.dateDebut|date('d-m-Y') }}
+       Date limite d'inscription : {{ sortie.dateCloture|date('d-m-Y') }}
        Nombre de places : {{ sortie.nbInscriptionsMax }}
        Durée : {{ sortie.duree }} minutes
        Description et infos : {{ sortie.descriptionInfos }}

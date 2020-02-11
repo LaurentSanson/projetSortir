@@ -10,6 +10,18 @@
         </button>
         <p>Filtrer les sorties</p>
     </div>
+    <div class="form-group">
+        <label for="exampleFormControlSelect1">Site</label>
+        <select class="form-control" id="exampleFormControlSelect1">
+            {% for site in sites %}
+            <option>{{ site.nom }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="exampleFormControlSelect1">Le nom de la sortie contient :</label>
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    </div>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -27,14 +39,14 @@
 
         {% for sortie in sorties %}
             <tr>
-                <th scope="row">{{ sortie.nom }}</th>
-                <th scope="row">{{ sortie.dateDebut }}</th>
-                <th scope="row">{{ sortie.dateCloture }}</th>
+                <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>
+                <th scope="row">{{ sortie.dateDebut|date('d-m-Y') }}</th>
+                <th scope="row">{{ sortie.dateCloture|date('d-m-Y') }}</th>
                 <th scope="row">{{ sortie.nbInscriptionsMax }}</th>
                 <th scope="row">{{ sortie.etat }}</th>
                 <th scope="row">X</th>
                 <th scope="row">{{ sortie.organisateur }}</th>
-                <td><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.name }}</a></td>
+                <td><a href="{{ path('detailSortie', {id:sortie.id}) }}">Supprimer</a></td>
             </tr>
         {% endfor %}
         </tbody>
