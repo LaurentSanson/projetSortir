@@ -23,7 +23,7 @@
         {% for site in sites %}
             <tr>
                 <th scope="row">{{ site.nom }}</th>
-                <td><a href="{{ path('detailSite', {id:site.id}) }}">{{ site.name }}</a></td>
+                <td><a href="{{ path('detailSite', {id:site.id}) }}">{{ site.nom }}</a></td>
                 <td>
                     <button class="delete" value="{{ site.id }}" type="submit" class="btn btn-outline-dark">Supprimer</button>
                 </td>
