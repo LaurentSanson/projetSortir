@@ -10,7 +10,9 @@ use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
 use http\Client\Curl\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SortieController extends AbstractController
@@ -18,6 +20,10 @@ class SortieController extends AbstractController
     /**
      * @Route("/sortieTriee/{orderParam}", name="sortieTriee")
      * @Route("/sortie", name="sortie")
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @param string $orderParam
+     * @return Response
      */
     public function index(EntityManagerInterface $em, Request $request, $orderParam = 'id')
     {
@@ -40,7 +46,7 @@ class SortieController extends AbstractController
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
-        if ($sortieForm->isSubmitted() && $sortieForm->isValid()){
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $user = $this->getUser();
             $site = $this->getUser()->getSite();
             $etat = $em->getRepository(Etat::class)->find(2);
@@ -50,7 +56,7 @@ class SortieController extends AbstractController
             $em->persist($sortie);
             $em->flush();
             $this->addFlash("success", "Votre sortie a bien été ajoutée !");
-            return $this->redirectToRoute('detailSortie', array('id'=>$sortie->getId()));
+            return $this->redirectToRoute('detailSortie', array('id' => $sortie->getId()));
         }
         return $this->render('sortie/ajouter.html.twig', [
             'sortieForm' => $sortieForm->createView()
@@ -67,9 +73,26 @@ class SortieController extends AbstractController
             ->find($id);
 
 
+        //affichage des option participant sur la page détail sortie
+        $miseEnForme = 0;
+
+        if ($sortie->getDateCloture() < new \DateTime('now')) {
+            $miseEnForme = 1;
+        } else {
+            foreach ($sortie->getParticipants() as $participant) {
+                if ($participant->getId() == $this->getUser()->getId()) {
+                    $miseEnForme = 2;
+                }
+            }
+            if ($sortie->getNbInscriptionsMax() == 0 ){
+                $miseEnForme = 2;
+            }
+        }
+
         return $this->render("sortie/detail.html.twig",
             [
-                "sortie" => $sortie
+                "sortie" => $sortie,
+                "miseEnForme" => $miseEnForme,
             ]
         );
     }
@@ -77,8 +100,12 @@ class SortieController extends AbstractController
     /**
      *
      * @Route("/effacer/{id}", name="effacerSortie")
+     * @param EntityManagerInterface $em
+     * @param $id
+     * @return Response
      */
-    public function delete(EntityManagerInterface $em, $id)
+    public
+    function delete(EntityManagerInterface $em, $id)
     {
         $sortie = $this->getDoctrine()->getManager()
             ->getRepository(Sortie::class)
@@ -95,5 +122,63 @@ class SortieController extends AbstractController
                 "sorties" => $sorties
             ]
         );
+    }
+
+    /**
+     * @Route("/inscription/{id}", name="inscription")
+     * @param $id
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function inscriptionSortie($id, EntityManagerInterface $entityManager)
+    {
+
+        $user = $this->getUser();
+
+        $repo = $entityManager->getRepository(Sortie::class);
+        $sortie = $repo->find($id);
+
+        if ($sortie->getNbInscriptionsMax() == 0) {
+            return $this->redirectToRoute('detailSortie', ['id' => $id]);
+        } else {
+            $sortie->setNbInscriptionsMax($sortie->getNbInscriptionsMax() - 1);
+
+            $user->addSortie($sortie);
+
+            $entityManager->flush();
+
+            $this->addFlash("success", "inscription OK");
+
+            return $this->redirectToRoute('detailSortie', ['id' => $id]);
+        }
+
+
+    }
+
+    /**
+     * @Route("/deinscription/{id}", name="deinscription")
+     * @param $id
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function deinscription($id, EntityManagerInterface $entityManager)
+    {
+        $user = $this->getUser();
+        $repo = $entityManager->getRepository(Sortie::class);
+        $sortie = $repo->find($id);
+
+        if ($sortie->getNbInscriptionsMax() == 0) {
+            return $this->redirectToRoute('detailSortie', ['id' => $id]);
+        } else {
+            $sortie->setNbInscriptionsMax($sortie->getNbInscriptionsMax() + 1);
+
+            $user->removeSortie($sortie);
+
+            $entityManager->flush();
+
+            $this->addFlash("success", "dé-inscription OK");
+
+            return $this->redirectToRoute('detailSortie', ['id' => $id]);
+        }
     }
 }
