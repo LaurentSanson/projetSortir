@@ -72,7 +72,7 @@
                 <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>
                 <th scope="row">{{ sortie.dateDebut|date('d-m-Y') }}</th>
                 <th scope="row">{{ sortie.dateCloture|date('d-m-Y') }}</th>
-                <th scope="row">{{ sortie.nbInscriptionsMax }}</th>
+                <th scope="row">{{ sortie.participants.count }} / {{ sortie.nbInscriptionsMax }}</th>
                 <th scope="row">{{ sortie.etat }}</th>
                 <th>
                     {% set inscrit = 0 %}
@@ -90,11 +90,12 @@
                            onclick=" $.ajax('{{ path('desinscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">se
                             desinscrire</a>
                     {% else %}
-                        <a href="#"
-                           onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">s'inscrire</a>
+                        {% if sortie.participants.count < sortie.nbInscriptionsMax %}
+                            <a href="#"
+                               onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">s'inscrire</a>
+                        {% endif %}
                     {% endif %}
                     {% if user.id == sortie.organisateur.id %}
-                        /
                         <a href="#">Modifier</a>
                         {#                                                <a href="#" #}
                         {#                           onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a>#}
