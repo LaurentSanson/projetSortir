@@ -56,7 +56,13 @@
             <tbody>
             {% for participant in sortie.participants %}
                 <tr>
-                    <th scope="row">{{ participant.pseudo }}</th>
+                    <th scope="row">
+                        {% if app.user == participant %}
+                            {{ participant.pseudo }}
+                        {% else %}
+                            <a href="{{ path('profil', {'id':participant.id}) }}">{{ participant.pseudo }}</a>
+                        {% endif %}
+                    </th>
                     <th scope="row">{{ participant.nom }}</th>
                 </tr>
             {% endfor %}
