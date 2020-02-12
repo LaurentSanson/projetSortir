@@ -213,8 +213,45 @@ class SortieController extends AbstractController
 
         return $this->render('sortie/modifier.html.twig',[
             'sortieForm'=> $form->createView(),
+            'sortie'=> $sortie,
 
         ]);
+    }
+
+    /**
+     * @Route("/annulation/{id}", name="annulation")
+     */
+    public function annulerSortie($id, EntityManagerInterface $em, Request $request)
+    {
+        $repo = $em->getRepository(Sortie::class);
+        $sortie = $repo->find($id);
+
+        $etatRepo = $em->getRepository(Etat::class);
+        $etat = $etatRepo->find(6);
+
+
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm->handleRequest($request);
+
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()){
+
+            $sortie->setEtat($etat);
+
+            $participants = $sortie->getParticipants();
+            foreach($participants as $participant){
+                $sortie->removeParticipant($participant);
+            }
+
+            $em->flush();
+            $this->addFlash("success", "sortie annulée");
+            return $this->redirectToRoute('sortie', ['id'=> $id]);
+        }
+
+        return $this->render('sortie/annuler.html.twig', [
+            'sortieForm'=> $sortieForm->createView(),
+            'sortie'=>$sortie,
+        ]);
+
     }
 
 }
