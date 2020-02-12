@@ -2,16 +2,16 @@
     width: 50%;
 }
 
-.detail{
-    float: left;
-    width: 400px;
-    height: auto;
-    margin: 10%;
-}
+/*.detail{*/
+/*    float: left;*/
+/*    width: 400px;*/
+/*    height: auto;*/
+/*    margin: 10%;*/
+/*}*/
 
-.after-detail {
-    clear: left;
-}
+/*.after-detail {*/
+/*    clear: left;*/
+/*}*/
 
 .container{
     padding-left: 10%;

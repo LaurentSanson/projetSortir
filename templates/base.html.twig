@@ -16,8 +16,9 @@
 
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{{ path('sortie') }}">Accueil</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="{{ path('main') }}">Accueil</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -32,14 +33,12 @@
                         <a class="nav-link" href="{{ path("security") }}"> Enregistrement </a>
                     </li>
                     <li class="nav-item active">
+                        <a class="nav-link" href="{{ path("sortie") }}"> Sortie </a>
+                    </li>
+                    <li class="nav-item active">
                         <a class="nav-link" href="{{ path("profil") }}"> Mon profil </a>
                     </li>
                 {% endif %}
-
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{ path("sortie") }}"> Sortie </a>
-                </li>
-
                 {% if app.user %}
                     <li class="nav-item active">
                         <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
@@ -49,12 +48,11 @@
         </div>
     </nav>
     {% if is_granted('ROLE_USER') %}
-    <div class="text-right">
-       Participant : {{ app.user.pseudo }} | date du jour : {{ "now"|date("d/m/Y") }}
-    </div>
+        <div class="text-right">
+            Participant : {{ app.user.pseudo }} | date du jour : {{ "now"|date("d/m/Y") }}
+        </div>
     {% endif %}
 </header>
-
 
 
 {% for label, messages in app.flashes %}
