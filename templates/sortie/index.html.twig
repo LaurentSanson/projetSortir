@@ -83,7 +83,12 @@
                         {% endif %}
                     {% endfor %}
                 </th>
-                <th scope="row"><a href="{{ path('profil', {id:sortie.id}) }}">{{ sortie.organisateur }}</a></th>
+                <th scope="row">
+                    {% if app.user == sortie.organisateur %}
+                    {{ sortie.organisateur }}
+                    {% else %}
+                    <a href="{{ path('profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur }}</a></th>
+                {% endif %}
                 <td>
                     {% if inscrit == 1 %}
                         <a href="#"

@@ -28,16 +28,23 @@ class ParticipantController extends AbstractController
 
     /**
      * @Route("/Profil", name="profil")
+     * @Route("/Profil/{id}", name="profil")
      * @param EntityManagerInterface $entityManager
      * @param Request $request
+     * @param $id
      * @return Response
      */
-    public function profil(EntityManagerInterface $entityManager, Request $request)
+    public function profil(EntityManagerInterface $entityManager, Request $request, $id = null)
     {
 
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        $participant = $this->getUser();
+        if ($id == null) {
+            $participant = $this->getUser();
+        } else {
+            $repo = $entityManager->getRepository(Participant::class);
+            $participant = $repo->find($id);
+        }
 
         return $this->render('participant/profil.html.twig', [
             'participant' => $participant,
@@ -75,7 +82,7 @@ class ParticipantController extends AbstractController
             );
 
 
-            if ($testParticipant->getId() == $participant->getId()){
+            if ($testParticipant->getId() == $participant->getId()) {
                 $testParticipant = null;
             }
 
