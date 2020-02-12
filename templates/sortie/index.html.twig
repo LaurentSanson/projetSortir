@@ -93,8 +93,8 @@
                         <a href="#"
                            onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">s'inscrire</a>
                     {% endif %}
+                    {% if user.id == sortie.organisateur.id
                     /
-                    {% if user.id == sortie.organisateur.id %}
                         <a href="#">Modifier</a>
                         {#                        <a href="#"#}
                         {#                           onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a>#}
