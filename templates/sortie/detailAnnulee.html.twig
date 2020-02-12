@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+    <h1>Details</h1>
+    <div class="row col-md-12">
+        <div class="card detail col-md-6">
+            <P>Nom de la sortie : {{ sortie.nom }}</P>
+            <P>Date et heure de la sortie : {{ sortie.dateDebut|date('d-m-Y') }}</P>
+        </div>
+        <div class="card detail col-md-6">
+            <p>motif d'annulation : {{ sortie.motif }}</p>
+        </div>
+    </div>
+
+{% endblock %}

@@ -5,6 +5,7 @@
 <div class="container">
     <div>
         <h1> {{ participant.pseudo }}</h1>
+        <img src="{{ asset('uploads/photos/'~participant.photo) }}" alt="photo de profil">
         <h3>Prénom : {{ participant.prenom }}</h3>
         <h3>Nom : {{ participant.nom }}</h3>
         <h3>Téléphone : {{ participant.telephone }}</h3>
