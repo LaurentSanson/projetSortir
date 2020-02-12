@@ -16,14 +16,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/sortieTriee/{orderParam}", name="sortieTriee")
+     * @Route("/sortieTriee", name="sortieTriee")
      * @Route("/sortie", name="sortie")
      * @param EntityManagerInterface $em
      * @param Request $request
-     * @param string $orderParam
      * @return Response
      */
-    public function index(EntityManagerInterface $em, Request $request, $orderParam = 'id')
+    public function index(EntityManagerInterface $em, Request $request)
     {
         $user = $this->getUser();
         $site = $request->get('site');
@@ -32,8 +31,10 @@ class SortieController extends AbstractController
         $checkbox2 = $request->get('checkbox2');
         $checkbox3 = $request->get('checkbox3');
         $checkbox4 = $request->get('checkbox4');
+        $dateDebut = $request->get('dateDebut');
+        $dateFin = $request->get('dateFin');
 
-        $sorties = $em->getRepository(Sortie::class)->search($search, $orderParam, $checkbox1, $user);
+        $sorties = $em->getRepository(Sortie::class)->search($site, $search, $dateDebut, $dateFin, $checkbox1, $checkbox2, $checkbox3, $checkbox4, $user);
         $sites = $em->getRepository(Site::class)->findAll();
 
         return $this->render('sortie/index.html.twig', [
@@ -189,4 +190,31 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('detailSortie', ['id' => $id]);
 
     }
+
+
+    /**
+     * @Route("/modification/{id}", name="modification")
+     */
+    public function modifierSortie($id, EntityManagerInterface $em, Request $request)
+    {
+        $repo = $em->getRepository(Sortie::class);
+        $sortie = $repo->find($id);
+
+        $form = $this->createForm(SortieType::class, $sortie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+
+            $em->flush();
+
+            $this->addFlash("success", "modification effectuée");
+            return $this->redirectToRoute('detailSortie', ['id' => $id]);
+        }
+
+        return $this->render('sortie/modifier.html.twig',[
+            'sortieForm'=> $form->createView(),
+
+        ]);
+    }
+
 }

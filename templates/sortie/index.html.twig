@@ -11,13 +11,13 @@
         </button>
         <p>Filtrer les sorties</p>
     </div>
-    <form method="get" action="{{ path('sortieTriee') }}">
+    <form method="GET" action="{{ path('sortieTriee') }}">
         <div class="menuGauche">
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Site</label>
                 <select class="form-control" id="exampleFormControlSelect1">
                     {% for site in sites %}
-                        <option value="{{ site.id }}">{{ site.nom }}</option>
+                        <option  name="site" value="{{ site.id }}" >{{ site.nom }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -28,9 +28,9 @@
             </div>
             <div>
                 <label for="exampleFormControlSelect1">Entre </label>
-                <input class="form-control mr-sm-2" type="date">
+                <input class="form-control mr-sm-2" type="date" name="dateDebut">
                 <label for="exampleFormControlSelect1">Et </label>
-                <input class="form-control mr-sm-2" type="date">
+                <input class="form-control mr-sm-2" type="date" name="dateFin">
             </div>
         </div>
         <div class="menuDroite">
@@ -96,7 +96,8 @@
                         {% endif %}
                     {% endif %}
                     {% if user.id == sortie.organisateur.id %}
-                        <a href="#">Modifier</a>
+
+                        <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
                         {#                                                <a href="#" #}
                         {#                           onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a>#}
                     {% endif %}
