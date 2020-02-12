@@ -11,13 +11,13 @@
         </button>
         <p>Filtrer les sorties</p>
     </div>
-    <form method="get" action="{{ path('sortieTriee') }}">
+    <form method="GET" action="{{ path('sortieTriee') }}">
         <div class="menuGauche">
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Site</label>
                 <select class="form-control" id="exampleFormControlSelect1">
                     {% for site in sites %}
-                        <option value="{{ site.id }}">{{ site.nom }}</option>
+                        <option name="site" value="{{ site.id }}">{{ site.nom }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -28,9 +28,9 @@
             </div>
             <div>
                 <label for="exampleFormControlSelect1">Entre </label>
-                <input class="form-control mr-sm-2" type="date">
+                <input class="form-control mr-sm-2" type="date" name="dateDebut">
                 <label for="exampleFormControlSelect1">Et </label>
-                <input class="form-control mr-sm-2" type="date">
+                <input class="form-control mr-sm-2" type="date" name="dateFin">
             </div>
         </div>
         <div class="menuDroite">
@@ -72,7 +72,7 @@
                 <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>
                 <th scope="row">{{ sortie.dateDebut|date('d-m-Y') }}</th>
                 <th scope="row">{{ sortie.dateCloture|date('d-m-Y') }}</th>
-                <th scope="row">{{ sortie.nbInscriptionsMax }}</th>
+                <th scope="row">{{ sortie.participants.count }} / {{ sortie.nbInscriptionsMax }}</th>
                 <th scope="row">{{ sortie.etat }}</th>
                 <th>
                     {% set inscrit = 0 %}
@@ -83,18 +83,25 @@
                         {% endif %}
                     {% endfor %}
                 </th>
-                <th scope="row"><a href="{{ path('profil', {id:sortie.id}) }}">{{ sortie.organisateur }}</a></th>
+                <th scope="row">
+                    {% if app.user == sortie.organisateur %}
+                    {{ sortie.organisateur }}
+                    {% else %}
+                    <a href="{{ path('profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur }}</a></th>
+                {% endif %}
                 <td>
                     {% if inscrit == 1 %}
                         <a href="#"
                            onclick=" $.ajax('{{ path('desinscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">se
                             desinscrire</a>
                     {% else %}
-                        <a href="#"
-                           onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">s'inscrire</a>
+                        {% if sortie.participants.count < sortie.nbInscriptionsMax %}
+                            <a href="#"
+                               onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">s'inscrire</a>
+                        {% endif %}
                     {% endif %}
                     {% if user.id == sortie.organisateur.id %}
-                        /
+
                         <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
                         {#                                                <a href="#" #}
                         {#                           onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a>#}

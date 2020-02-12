@@ -3,12 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Etat;
-use App\Entity\Participant;
 use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Client\Curl\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,14 +16,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/sortieTriee/{orderParam}", name="sortieTriee")
+     * @Route("/sortieTriee", name="sortieTriee")
      * @Route("/sortie", name="sortie")
      * @param EntityManagerInterface $em
      * @param Request $request
-     * @param string $orderParam
      * @return Response
      */
-    public function index(EntityManagerInterface $em, Request $request, $orderParam = 'id')
+    public function index(EntityManagerInterface $em, Request $request)
     {
         $user = $this->getUser();
         $site = $request->get('site');
@@ -34,8 +31,10 @@ class SortieController extends AbstractController
         $checkbox2 = $request->get('checkbox2');
         $checkbox3 = $request->get('checkbox3');
         $checkbox4 = $request->get('checkbox4');
+        $dateDebut = $request->get('dateDebut');
+        $dateFin = $request->get('dateFin');
 
-        $sorties = $em->getRepository(Sortie::class)->search($search, $orderParam, $checkbox1, $user);
+        $sorties = $em->getRepository(Sortie::class)->search($site, $search, $dateDebut, $dateFin, $checkbox1, $checkbox2, $checkbox3, $checkbox4, $user);
         $sites = $em->getRepository(Site::class)->findAll();
 
         return $this->render('sortie/index.html.twig', [
@@ -47,6 +46,9 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/nouvelleSortie", name="nouvelleSortie")
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return RedirectResponse|Response
      */
     public function nouvelleSortie(EntityManagerInterface $em, Request $request)
     {
@@ -146,10 +148,12 @@ class SortieController extends AbstractController
         $repo = $entityManager->getRepository(Sortie::class);
         $sortie = $repo->find($id);
 
-        if ($sortie->getNbInscriptionsMax() == 0) {
+        $nbParticipant = $sortie->getParticipants()->count();
+
+        if ($sortie->getNbInscriptionsMax() == $nbParticipant) {
             return $this->redirectToRoute('detailSortie', ['id' => $id]);
         } else {
-            $sortie->setNbInscriptionsMax($sortie->getNbInscriptionsMax() - 1);
+//            $sortie->setNbInscriptionsMax($sortie->getNbInscriptionsMax() - 1);
 
             $user->addSortie($sortie);
 
@@ -173,7 +177,9 @@ class SortieController extends AbstractController
         $repo = $entityManager->getRepository(Sortie::class);
         $sortie = $repo->find($id);
 
-        $sortie->setNbInscriptionsMax($sortie->getNbInscriptionsMax() + 1);
+//        $nbParticipant = $sortie->getParticipants()->count();
+
+//        $sortie->setNbInscriptionsMax($sortie->getNbInscriptionsMax() + 1);
 
         $user->removeSortie($sortie);
 

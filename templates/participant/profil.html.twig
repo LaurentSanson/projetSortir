@@ -10,9 +10,11 @@
         <h3>Téléphone : {{ participant.telephone }}</h3>
         <h3>Email : {{ participant.mail }}</h3>
         <h3>Site de rattachement : {{ participant.site }}</h3>
+
+        {% if app.user == participant %}
         <a href="{{ path("modifierProfil") }}">
             <button type="button" class="btn btn-outline-secondary">modifier</button>
         </a>
-
+        {% endif %}
 </div>
 {% endblock %}
