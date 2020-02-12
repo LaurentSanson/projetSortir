@@ -24,7 +24,9 @@ class SortieRepository extends ServiceEntityRepository
     public function search($site, $search, $dateDebut, $dateFin, $checkbox1, $checkbox2, $checkbox3, $checkbox4, $user)
     {
         $qb = $this->createQueryBuilder('i');
-//        $qb->andWhere('i.site = :site')
+//        $qb->innerJoin('i.site', 's')
+//            ->andWhere('i.site = :site')
+//            ->andWhere('i.site MEMBER OF s.sorties')
 //            ->setParameter('site', $site);
         $qb->andWhere('i.nom LIKE :search')
             ->setParameter('search', "%" . $search . "%");
@@ -39,11 +41,15 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('user', $user);
         }
         if ($checkbox2 == "on") {
-            $qb->andWhere('i.organisateur = :user')
+            $qb->innerJoin('i.participants', 'participants')
+                ->andWhere(':user MEMBER OF i.participants')
+                ->andWhere('participants MEMBER OF i.participants')
                 ->setParameter('user', $user);
         }
         if ($checkbox3 == "on") {
-            $qb->andWhere('i.participants != :user')
+            $qb->innerJoin('i.participants', 'participants')
+                ->andWhere(':user NOT MEMBER OF i.participants')
+                ->andWhere('participants MEMBER OF i.participants')
                 ->setParameter('user', $user);
         }
         if ($checkbox4 == 'on') {
