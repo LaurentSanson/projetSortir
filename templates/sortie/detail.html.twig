@@ -3,8 +3,8 @@
 {% block body %}
     <div class="container">
     <h1>Details</h1>
-    <div>
-        <div class="card detail">
+    <div class="row col-md-12">
+        <div class="card detail col-md-6">
             <P>Nom de la sortie : {{ sortie.nom }}</P>
             <P>Date et heure de la sortie : {{ sortie.dateDebut|date('d-m-Y') }}</P>
             <P>Date limite d'inscription : {{ sortie.dateCloture|date('d-m-Y') }}</P>
@@ -12,7 +12,7 @@
             <P>Durée : {{ sortie.duree }} minutes</P>
             <P>Description et infos : {{ sortie.descriptionInfos }}</P>
         </div>
-        <div class="card detail">
+        <div class="card detail col-md-6">
             <p>Lieu : {{ sortie.lieu }}</p>
             <p>Rue : {{ sortie.lieu.rue }}</p>
             <p>Ville : {{ sortie.lieu.ville }}</p>
@@ -22,14 +22,14 @@
         </div>
     </div>
     {% if ( miseEnForme == 0) %}
-        <div class="after-detail">
+        <div class="after-detail row">
             <a href="{{ path('inscription', {id : sortie.id}) }}">
                 <button type="button" class="btn btn-outline-success btn-sm">S'inscrire</button>
             </a>
         </div>
     {% endif %}
     {% if ( miseEnForme == 1) %}
-        <div class="after-detail">
+        <div class="after-detail row">
             <h4>Inscription terminée</h4>
         </div>
     {% endif %}
