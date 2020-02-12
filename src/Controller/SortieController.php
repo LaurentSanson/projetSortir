@@ -35,12 +35,13 @@ class SortieController extends AbstractController
         $checkbox3 = $request->get('checkbox3');
         $checkbox4 = $request->get('checkbox4');
 
-
         $sorties = $em->getRepository(Sortie::class)->search($search, $orderParam, $checkbox1, $user);
         $sites = $em->getRepository(Site::class)->findAll();
+
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
             'sites' => $sites,
+            'user' => $user,
         ]);
     }
 
@@ -161,12 +162,12 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/deinscription/{id}", name="deinscription")
+     * @Route("/desinscription/{id}", name="desinscription")
      * @param $id
      * @param EntityManagerInterface $entityManager
      * @return RedirectResponse
      */
-    public function deinscription($id, EntityManagerInterface $entityManager)
+    public function desinscription($id, EntityManagerInterface $entityManager)
     {
         $user = $this->getUser();
         $repo = $entityManager->getRepository(Sortie::class);
@@ -178,7 +179,7 @@ class SortieController extends AbstractController
 
         $entityManager->flush();
 
-        $this->addFlash("success", "dé-inscription OK");
+        $this->addFlash("success", "désinscription OK");
 
         return $this->redirectToRoute('detailSortie', ['id' => $id]);
 

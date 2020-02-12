@@ -74,10 +74,32 @@
                 <th scope="row">{{ sortie.dateCloture|date('d-m-Y') }}</th>
                 <th scope="row">{{ sortie.nbInscriptionsMax }}</th>
                 <th scope="row">{{ sortie.etat }}</th>
-                <th scope="row">X</th>
+                <th>
+                    {% set inscrit = 0 %}
+                    {% for participant in sortie.participants %}
+                        {% if participant.id == user.id %}
+                            X
+                            {% set inscrit = 1 %}
+                        {% endif %}
+                    {% endfor %}
+                </th>
                 <th scope="row"><a href="{{ path('profil', {id:sortie.id}) }}">{{ sortie.organisateur }}</a></th>
-                <td><a href="#"
-                       onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a>
+                <td>
+                    {% if inscrit == 1 %}
+                        <a href="#"
+                           onclick=" $.ajax('{{ path('desinscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">se
+                            desinscrire</a>
+                    {% else %}
+                        <a href="#"
+                           onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">s'inscrire</a>
+                    {% endif %}
+                    /
+                    {% if user.id == sortie.organisateur.id %}
+                        <a href="#">Modifier</a>
+                        {#                        <a href="#"#}
+                        {#                           onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a>#}
+                    {% endif %}
+
                 </td>
             </tr>
         {% endfor %}
