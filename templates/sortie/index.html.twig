@@ -15,9 +15,9 @@
         <div class="menuGauche">
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Site</label>
-                <select class="form-control" id="exampleFormControlSelect1">
+                <select class="form-control" id="exampleFormControlSelect1"  name="site">
                     {% for site in sites %}
-                        <option name="site" value="{{ site.id }}">{{ site.nom }}</option>
+                        <option value="{{ site.id }}">{{ site.nom }}</option>
                     {% endfor %}
                 </select>
             </div>

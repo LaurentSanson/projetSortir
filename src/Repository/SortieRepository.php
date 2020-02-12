@@ -24,10 +24,13 @@ class SortieRepository extends ServiceEntityRepository
     public function search($site, $search, $dateDebut, $dateFin, $checkbox1, $checkbox2, $checkbox3, $checkbox4, $user)
     {
         $qb = $this->createQueryBuilder('i');
-//        $qb->innerJoin('i.site', 's')
-//            ->andWhere('i.site = :site')
-//            ->andWhere('i.site MEMBER OF s.sorties')
-//            ->setParameter('site', $site);
+        $qb->andWhere('i.dateDebut > :olderThanAMonth')
+            ->setParameter('olderThanAMonth', new \DateTime('-30 days'));
+        if ($site){
+            $qb->andWhere('i.site = :site')
+                ->setParameter('site', $site);
+        }
+
         $qb->andWhere('i.nom LIKE :search')
             ->setParameter('search', "%" . $search . "%");
         if ($dateDebut) {
