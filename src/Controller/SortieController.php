@@ -38,9 +38,11 @@ class SortieController extends AbstractController
 
         $sorties = $em->getRepository(Sortie::class)->search($site, $search, $dateDebut, $dateFin, $checkbox1, $checkbox2, $checkbox3, $checkbox4, $user);
         $sites = $em->getRepository(Site::class)->findAll();
+
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
             'sites' => $sites,
+            'user' => $user,
         ]);
     }
 
@@ -161,12 +163,12 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/deinscription/{id}", name="deinscription")
+     * @Route("/desinscription/{id}", name="desinscription")
      * @param $id
      * @param EntityManagerInterface $entityManager
      * @return RedirectResponse
      */
-    public function deinscription($id, EntityManagerInterface $entityManager)
+    public function desinscription($id, EntityManagerInterface $entityManager)
     {
         $user = $this->getUser();
         $repo = $entityManager->getRepository(Sortie::class);
@@ -178,9 +180,36 @@ class SortieController extends AbstractController
 
         $entityManager->flush();
 
-        $this->addFlash("success", "dé-inscription OK");
+        $this->addFlash("success", "désinscription OK");
 
         return $this->redirectToRoute('detailSortie', ['id' => $id]);
 
     }
+
+
+    /**
+     * @Route("/modification/{id}", name="modification")
+     */
+    public function modifierSortie($id, EntityManagerInterface $em, Request $request)
+    {
+        $repo = $em->getRepository(Sortie::class);
+        $sortie = $repo->find($id);
+
+        $form = $this->createForm(SortieType::class, $sortie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+
+            $em->flush();
+
+            $this->addFlash("success", "modification effectuée");
+            return $this->redirectToRoute('detailSortie', ['id' => $id]);
+        }
+
+        return $this->render('sortie/modifier.html.twig',[
+            'sortieForm'=> $form->createView(),
+
+        ]);
+    }
+
 }
