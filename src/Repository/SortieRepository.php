@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Types\Type;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @method Sortie|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,18 +21,37 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
-    public function search($search, $order, $checkbox1, $user)
+    public function search($search, $checkbox4)
     {
-        $qb = $this->createQueryBuilder('i')
-            ->Where('i.nom LIKE :search')
-            ->setParameter('search', "%".$search."%")
-            ->orderBy('i.'.$order, 'asc');
-
-        if($checkbox1 == "ON"){
-            $qb->andWhere('i.organisateur = :true')
-                ->setParameter('true', $user);
+        $qb = $this->createQueryBuilder('i');
+//        $qb->andWhere('i.site = :site')
+//            ->setParameter('site', $site);
+        $qb->andWhere('i.nom LIKE :search')
+            ->setParameter('search', "%" . $search . "%");
+//
+//
+//        if ($dateDebut) {
+//            $qb->andWhere('i.dateDebut BETWEEN :debut AND :fin')
+//                ->setParameter('debut', $dateDebut)
+//                ->setParameter('fin', $dateFin);
+//        }
+//
+//        if ($checkbox1 = "ON") {
+//            $qb->andWhere('i.organisateur = :user')
+//                ->setParameter('user', $user);
+//        }
+//        if ($checkbox2 = "ON") {
+//            $qb->andWhere('i.organisateur = :true')
+//                ->setParameter('true', $user);
+//        }
+//        if ($checkbox3 = "ON") {
+//            $qb->andWhere('i.organisateur = :true')
+//                ->setParameter('true', $user);
+//        }
+        if ($checkbox4 = "ON") {
+            $qb->andWhere('i.dateDebut < :today')
+                ->setParameter('today', new \DateTime('now'));
         }
-
         $query = $qb->getQuery();
         return $query->getResult();
     }

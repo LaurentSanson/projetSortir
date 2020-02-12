@@ -11,13 +11,13 @@
         </button>
         <p>Filtrer les sorties</p>
     </div>
-    <form method="get" action="{{ path('sortieTriee') }}">
+    <form method="GET" action="{{ path('sortieTriee') }}">
         <div class="menuGauche">
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Site</label>
                 <select class="form-control" id="exampleFormControlSelect1">
                     {% for site in sites %}
-                        <option value="{{ site.id }}">{{ site.nom }}</option>
+                        <option  name="site" >{{ site.nom }}</option>
                     {% endfor %}
                 </select>
             </div>

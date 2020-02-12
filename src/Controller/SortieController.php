@@ -18,14 +18,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/sortieTriee/{orderParam}", name="sortieTriee")
+     * @Route("/sortieTriee", name="sortieTriee")
      * @Route("/sortie", name="sortie")
      * @param EntityManagerInterface $em
      * @param Request $request
-     * @param string $orderParam
      * @return Response
      */
-    public function index(EntityManagerInterface $em, Request $request, $orderParam = 'id')
+    public function index(EntityManagerInterface $em, Request $request)
     {
         $user = $this->getUser();
         $site = $request->get('site');
@@ -34,9 +33,10 @@ class SortieController extends AbstractController
         $checkbox2 = $request->get('checkbox2');
         $checkbox3 = $request->get('checkbox3');
         $checkbox4 = $request->get('checkbox4');
+        $dateDebut = $request->get('dateDebut');
+        $dateFin = $request->get('dateFin');
 
-
-        $sorties = $em->getRepository(Sortie::class)->search($search, $orderParam, $checkbox1, $user);
+        $sorties = $em->getRepository(Sortie::class)->search($search, $checkbox4);
         $sites = $em->getRepository(Site::class)->findAll();
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
