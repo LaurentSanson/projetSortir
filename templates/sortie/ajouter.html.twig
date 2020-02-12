@@ -10,7 +10,9 @@
     <div>
         {{ form_start(sortieForm) }}
         {{ form_widget(sortieForm) }}
-        <button type="submit">Valider</button>
+        <button type="submit">Enregister</button>
+{#        <button type="submit">Publier la sortie</button>#}
+
         <button type="submit"><a href="{{ path('nouveauLieu') }}">Ajouter un lieu</a></button>
         {{ form_end(sortieForm) }}
     </div>

@@ -15,7 +15,7 @@
         <div class="menuGauche">
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Site</label>
-                <select class="form-control" id="exampleFormControlSelect1"  name="site">
+                <select class="form-control" id="exampleFormControlSelect1" name="site">
                     {% for site in sites %}
                         <option value="{{ site.id }}">{{ site.nom }}</option>
                     {% endfor %}
@@ -90,22 +90,27 @@
                     <a href="{{ path('profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur }}</a></th>
                 {% endif %}
                 <td>
-                    {% if inscrit == 1 %}
-                        <a href="#"
-                           onclick=" $.ajax('{{ path('desinscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">se
-                            desinscrire</a>
+                    {% if (sortie.etat.libelle != "Ouverte") %}
                     {% else %}
-                        {% if sortie.participants.count < sortie.nbInscriptionsMax %}
+                        {% if inscrit == 1 %}
                             <a href="#"
-                               onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">s'inscrire</a>
+                               onclick=" $.ajax('{{ path('desinscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">se
+                                desinscrire</a>
+                        {% else %}
+                            {% if sortie.participants.count < sortie.nbInscriptionsMax %}
+                                <a href="#"
+                                   onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">s'inscrire</a>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
-                    {% if user.id == sortie.organisateur.id %}
 
+
+                    {% if user.id == sortie.organisateur.id and (sortie.etat == "Ouverte" or sortie.etat == "Créee")%}
                         <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
                         {#                                                <a href="#" #}
                         {#                           onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a>#}
                     {% endif %}
+
 
                 </td>
             </tr>
