@@ -202,11 +202,12 @@ class SortieController extends AbstractController
             $em->flush();
 
             $this->addFlash("success", "modification effectuée");
-            return $this->redirectToRoute('sortie');
+            return $this->redirectToRoute('detailSortie', ['id' => $id]);
         }
 
         return $this->render('sortie/modifier.html.twig',[
             'sortieForm'=> $form->createView(),
+
         ]);
     }
 
