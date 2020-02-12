@@ -6,12 +6,18 @@
 
 {% block body %}
 
-    <h3>Ajouter une sortie</h3>
+    <h3>Modifier une sortie</h3>
     <div>
         {{ form_start(sortieForm) }}
         {{ form_widget(sortieForm) }}
         <button type="submit">Modifier</button>
         {{ form_end(sortieForm) }}
+    </div>
+    <br>
+    <div class="annuler">
+        <a href="{{ path('annulation', {id : sortie.id}) }}">
+            <button type="button" class="btn btn-outline-success btn-sm">Annuler la sortie</button>
+        </a>
     </div>
 
 {% endblock %}
