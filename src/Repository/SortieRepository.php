@@ -21,34 +21,32 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
-    public function search($search, $checkbox4)
+    public function search($site, $search, $dateDebut, $dateFin, $checkbox1, $checkbox2, $checkbox3, $checkbox4, $user)
     {
         $qb = $this->createQueryBuilder('i');
 //        $qb->andWhere('i.site = :site')
 //            ->setParameter('site', $site);
         $qb->andWhere('i.nom LIKE :search')
             ->setParameter('search', "%" . $search . "%");
-//
-//
-//        if ($dateDebut) {
-//            $qb->andWhere('i.dateDebut BETWEEN :debut AND :fin')
-//                ->setParameter('debut', $dateDebut)
-//                ->setParameter('fin', $dateFin);
-//        }
-//
-//        if ($checkbox1 = "ON") {
-//            $qb->andWhere('i.organisateur = :user')
-//                ->setParameter('user', $user);
-//        }
-//        if ($checkbox2 = "ON") {
-//            $qb->andWhere('i.organisateur = :true')
-//                ->setParameter('true', $user);
-//        }
-//        if ($checkbox3 = "ON") {
-//            $qb->andWhere('i.organisateur = :true')
-//                ->setParameter('true', $user);
-//        }
-        if ($checkbox4 = "ON") {
+        if ($dateDebut) {
+            $qb->andWhere('i.dateDebut BETWEEN :debut AND :fin')
+                ->setParameter('debut', $dateDebut)
+                ->setParameter('fin', $dateFin);
+        }
+
+        if ($checkbox1 == "on") {
+            $qb->andWhere('i.organisateur = :user')
+                ->setParameter('user', $user);
+        }
+        if ($checkbox2 == "on") {
+            $qb->andWhere('i.organisateur = :user')
+                ->setParameter('user', $user);
+        }
+        if ($checkbox3 == "on") {
+            $qb->andWhere('i.participants != :user')
+                ->setParameter('user', $user);
+        }
+        if ($checkbox4 == 'on') {
             $qb->andWhere('i.dateDebut < :today')
                 ->setParameter('today', new \DateTime('now'));
         }

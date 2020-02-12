@@ -36,7 +36,7 @@ class SortieController extends AbstractController
         $dateDebut = $request->get('dateDebut');
         $dateFin = $request->get('dateFin');
 
-        $sorties = $em->getRepository(Sortie::class)->search($search, $checkbox4);
+        $sorties = $em->getRepository(Sortie::class)->search($site, $search, $dateDebut, $dateFin, $checkbox1, $checkbox2, $checkbox3, $checkbox4, $user);
         $sites = $em->getRepository(Site::class)->findAll();
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
