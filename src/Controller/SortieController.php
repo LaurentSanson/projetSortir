@@ -82,8 +82,13 @@ class SortieController extends AbstractController
             ->getRepository(Sortie::class)
             ->find($id);
 
+        //renvoyer sur page annulée si sortie annulée
+        $etatId = $sortie->getEtat()->getId();
+        if($etatId == 6){
+            return $this->render("sortie/detailAnnulee.html.twig", [ 'sortie'=> $sortie]);
+        }
 
-        //affichage des option participant sur la page détail sortie
+        //affichage des options participant sur la page détail sortie
         $miseEnForme = 0;
 
         if ($sortie->getDateCloture() < new \DateTime('now')) {
@@ -234,9 +239,9 @@ class SortieController extends AbstractController
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()){
-
+            //on change l'état à "annulée"
             $sortie->setEtat($etat);
-
+            //on retire les participants inscrits
             $participants = $sortie->getParticipants();
             foreach($participants as $participant){
                 $sortie->removeParticipant($participant);
