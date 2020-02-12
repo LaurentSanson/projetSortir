@@ -184,4 +184,30 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('detailSortie', ['id' => $id]);
 
     }
+
+
+    /**
+     * @Route("/modification/{id}", name="modification")
+     */
+    public function modifierSortie($id, EntityManagerInterface $em, Request $request)
+    {
+        $repo = $em->getRepository(Sortie::class);
+        $sortie = $repo->find($id);
+
+        $form = $this->createForm(SortieType::class, $sortie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+
+            $em->flush();
+
+            $this->addFlash("success", "modification effectuée");
+            return $this->redirectToRoute('sortie');
+        }
+
+        return $this->render('sortie/modifier.html.twig',[
+            'sortieForm'=> $form->createView(),
+        ]);
+    }
+
 }
