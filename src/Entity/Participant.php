@@ -81,6 +81,11 @@ class Participant implements UserInterface
      */
     private $site;
 
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $photo;
+
     public function __construct()
     {
         $this->sortie = new ArrayCollection();
@@ -295,6 +300,18 @@ class Participant implements UserInterface
     public function setSite(?site $site): self
     {
         $this->site = $site;
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): self
+    {
+        $this->photo = $photo;
 
         return $this;
     }
