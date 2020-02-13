@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+<div class="container">
+    <h2>Liste des enregistrés</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">nom</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Pseudo</th>
+            <th scope="col">Profil</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        </thead>
+        {% for participant in participants %}
+            <tbody>
+            <tr>
+                <th>
+                    {{ participant.id }}
+                </th>
+                <td>
+                    {{ participant.nom }}
+                </td>
+                <td>
+                    {{ participant.prenom }}
+                </td>
+                <td>
+                    {{ participant.pseudo }}
+                </td>
+                <td>
+                    <a href= "{{ path('profil',{"id":participant.id}) }}">Details</a>
+                </td>
+                <td>
+                    <a href="#">désactiver</a>
+                </td>
+            </tr>
+            </tbody>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
