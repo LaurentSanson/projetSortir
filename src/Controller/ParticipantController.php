@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class ParticipantController extends AbstractController
 {
@@ -150,5 +153,76 @@ class ParticipantController extends AbstractController
             'participants'=> $participants,
         ]);
     }
+
+
+
+//    /**
+//     * @Route("/essai", name ="essai")
+//     * @param EntityManagerInterface $entityManager
+//     */
+//    public function extraireFichierCsv(EntityManagerInterface $entityManager)
+//    {
+//
+//        $id = 1
+//        $repo = $entityManager->getRepository(Participant::class);
+//        $util1 = $repo->find($id);
+//
+////        $util1 = 'essai';
+//
+//        // creation d'un serializers csv
+//        $encoders = [new CsvEncoder()];
+//        $normalizers = [new ObjectNormalizer()];
+//        $serializer = new Serializer($normalizers, $encoders);
+//
+////        $userCsv = $serializer->serialize($util1, 'csv');
+//
+//        var_dump($util1);
+////        echo ($userCsv);
+//        die();
+//    }
+
+
+
+    /**
+     * @Route("/gestion/liste/desactiver/{id}", name = "desactiver")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function desactiver($id, EntityManagerInterface $em)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $participantsRepo = $em->getRepository(Participant::class);
+        $participant = $participantsRepo->find($id);
+
+        $participant->setActif(false);
+
+        $em->flush();
+
+        return $this->redirectToRoute('liste', ['id'=>$id]);
+    }
+
+
+    /**
+     * @Route("/gestion/liste/activer/{id}", name = "activer")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function activer($id, EntityManagerInterface $em)
+    {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $participantsRepo = $em->getRepository(Participant::class);
+        $participant = $participantsRepo->find($id);
+
+        $participant->setActif(true);
+
+        $em->flush();
+
+        return $this->redirectToRoute('liste', ['id'=>$id]);
+    }
+
 }
 
