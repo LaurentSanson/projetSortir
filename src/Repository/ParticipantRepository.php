@@ -36,6 +36,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
         $this->_em->flush();
     }
 
+
     public function getParticipantByUsername($username)
     {
         return $this->createQueryBuilder('p')
@@ -43,6 +44,15 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
         ->setParameter('username', $username)
         ->getQuery()
         ->getResult();
+
+
+    public function findByEmail($email)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.mail = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
 
     }
 
