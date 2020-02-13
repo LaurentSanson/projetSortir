@@ -155,6 +155,7 @@ class ParticipantController extends AbstractController
     }
 
 
+
 //    /**
 //     * @Route("/essai", name ="essai")
 //     * @param EntityManagerInterface $entityManager
@@ -179,13 +180,14 @@ class ParticipantController extends AbstractController
 ////        echo ($userCsv);
 //        die();
 //    }
-//
+
 
 
     /**
-     * @Route("/gestion/liste/{id}", name = "desactiver")
+     * @Route("/gestion/liste/desactiver/{id}", name = "desactiver")
      * @param $id
      * @param EntityManagerInterface $em
+     * @return RedirectResponse
      */
     public function desactiver($id, EntityManagerInterface $em)
     {
@@ -200,20 +202,23 @@ class ParticipantController extends AbstractController
         return $this->redirectToRoute('liste', ['id'=>$id]);
     }
 
+
     /**
-     * @Route("/gestion/liste/{id}", name = "activer")
+     * @Route("/gestion/liste/activer/{id}", name = "activer")
      * @param $id
      * @param EntityManagerInterface $em
+     * @return RedirectResponse
      */
     public function activer($id, EntityManagerInterface $em)
     {
+
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $participantsRepo = $em->getRepository(Participant::class);
         $participant = $participantsRepo->find($id);
 
         $participant->setActif(true);
 
-        
         $em->flush();
 
         return $this->redirectToRoute('liste', ['id'=>$id]);
