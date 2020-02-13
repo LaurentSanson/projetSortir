@@ -2,7 +2,7 @@
 
 
 {% block body %}
-<div class="container">
+    <div class="container">
     <div>
         <h1> {{ participant.pseudo }}</h1>
         <img src="{{ asset('uploads/photos/'~participant.photo) }}" alt="photo de profil">
@@ -13,9 +13,15 @@
         <h3>Site de rattachement : {{ participant.site }}</h3>
 
         {% if app.user == participant %}
-        <a href="{{ path("modifierProfil") }}">
-            <button type="button" class="btn btn-outline-secondary">modifier</button>
-        </a>
+            <a href="{{ path("modifierProfil") }}">
+                <button type="button" class="btn btn-outline-secondary">modifier</button>
+            </a>
         {% endif %}
-</div>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path("supprimer", {id: participant.id}) }}">
+                <button type="button" class="btn btn-outline-secondary">Supprimer</button>
+            </a>
+        {% endif %}
+    </div>
 {% endblock %}

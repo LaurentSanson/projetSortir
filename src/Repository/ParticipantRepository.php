@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+
 /**
  * @method Participant|null find($id, $lockMode = null, $lockVersion = null)
  * @method Participant|null findOneBy(array $criteria, array $orderBy = null)
@@ -40,10 +41,11 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     public function getParticipantByUsername($username)
     {
         return $this->createQueryBuilder('p')
-        ->andWhere('p.pseudo = :username')
-        ->setParameter('username', $username)
-        ->getQuery()
-        ->getResult();
+            ->andWhere('p.pseudo = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getResult();
+    }
 
 
     public function findByEmail($email)

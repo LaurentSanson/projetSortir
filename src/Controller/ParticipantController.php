@@ -51,6 +51,7 @@ class ParticipantController extends AbstractController
 
         return $this->render('participant/profil.html.twig', [
             'participant' => $participant,
+
         ]);
     }
 
@@ -198,7 +199,7 @@ class ParticipantController extends AbstractController
         $participant->setActif(false);
 
         $em->flush();
-
+        $this->addFlash("warning", "Le participant est maintenant inactif");
         return $this->redirectToRoute('liste', ['id'=>$id]);
     }
 
@@ -224,5 +225,32 @@ class ParticipantController extends AbstractController
         return $this->redirectToRoute('liste', ['id'=>$id]);
     }
 
+
+    /**
+     * @Route("/gestion/participant/supprimer/{id}", name = "supprimer")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function supprimerParticipant($id, EntityManagerInterface $em)
+    {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $participant = $em->getRepository(Participant::class)->find($id);
+
+        if ($participant->getSortie()->count() == 0 && $participant->getOrganisateurSortie()->count() == 0)
+        {
+            $em->remove($participant);
+            $em->flush();
+            $this->addFlash('success', 'Utilisateur supprimé');
+            return $this->redirectToRoute('liste');
+        }else{
+            $this->addFlash('warning', 'l\'utilisateur a encore des activités en cours');
+        }
+        
+        return $this->redirectToRoute('liste');
+
+    }
 }
 
