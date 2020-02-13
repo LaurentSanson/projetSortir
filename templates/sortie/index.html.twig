@@ -68,52 +68,56 @@
         <tbody>
 
         {% for sortie in sorties %}
-            <tr>
-                <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>
-                <th scope="row">{{ sortie.dateDebut|date('d-m-Y') }}</th>
-                <th scope="row">{{ sortie.dateCloture|date('d-m-Y') }}</th>
-                <th scope="row">{{ sortie.participants.count }} / {{ sortie.nbInscriptionsMax }}</th>
-                <th scope="row">{{ sortie.etat }}</th>
-                <th>
-                    {% set inscrit = 0 %}
-                    {% for participant in sortie.participants %}
-                        {% if participant.id == user.id %}
-                            X
-                            {% set inscrit = 1 %}
-                        {% endif %}
-                    {% endfor %}
-                </th>
-                <th scope="row">
-                    {% if app.user == sortie.organisateur %}
-                    {{ sortie.organisateur }}
-                    {% else %}
-                    <a href="{{ path('profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur }}</a></th>
-                {% endif %}
-                <td>
-                    {% if (sortie.etat.libelle != "Ouverte") %}
-                    {% else %}
-                        {% if inscrit == 1 %}
-                            <a href="#"
-                               onclick=" $.ajax('{{ path('desinscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">se
-                                desinscrire</a>
+            {% if (app.user != sortie.organisateur and sortie.etat == "Créee") %}
+
+            {% else %}
+                <tr>
+                    <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>
+                    <th scope="row">{{ sortie.dateDebut|date('d-m-Y') }}</th>
+                    <th scope="row">{{ sortie.dateCloture|date('d-m-Y') }}</th>
+                    <th scope="row">{{ sortie.participants.count }} / {{ sortie.nbInscriptionsMax }}</th>
+                    <th scope="row">{{ sortie.etat }}</th>
+                    <th>
+                        {% set inscrit = 0 %}
+                        {% for participant in sortie.participants %}
+                            {% if participant.id == user.id %}
+                                X
+                                {% set inscrit = 1 %}
+                            {% endif %}
+                        {% endfor %}
+                    </th>
+                    <th scope="row">
+                        {% if app.user == sortie.organisateur %}
+                        {{ sortie.organisateur }}
                         {% else %}
-                            {% if sortie.participants.count < sortie.nbInscriptionsMax %}
+                        <a href="{{ path('profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur }}</a></th>
+                    {% endif %}
+                    <td>
+                        {% if (sortie.etat.libelle != "Ouverte") %}
+                        {% else %}
+                            {% if inscrit == 1 %}
                                 <a href="#"
-                                   onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">s'inscrire</a>
+                                   onclick=" $.ajax('{{ path('desinscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">se
+                                    desinscrire</a>
+                            {% else %}
+                                {% if sortie.participants.count < sortie.nbInscriptionsMax %}
+                                    <a href="#"
+                                       onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">s'inscrire</a>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
-                    {% endif %}
 
 
-                    {% if user.id == sortie.organisateur.id and (sortie.etat == "Ouverte" or sortie.etat == "Créee")%}
-                        <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
-                        {#                                                <a href="#" #}
-                        {#                           onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a>#}
-                    {% endif %}
+                        {% if user.id == sortie.organisateur.id and (sortie.etat == "Ouverte" or sortie.etat == "Créee") %}
+                            <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
+                            {#                                                <a href="#" #}
+                            {#                           onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a>#}
+                        {% endif %}
 
 
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            {% endif %}
         {% endfor %}
         </tbody>
     </table>
