@@ -134,5 +134,21 @@ class ParticipantController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/gestion/liste", name = "liste")
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    public function listerParticipants(EntityManagerInterface $em)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $participantsRepo = $em->getRepository(Participant::class);
+        $participants = $participantsRepo->findAll();
+
+        return $this->render("participant/liste.html.twig", [
+            'participants'=> $participants,
+        ]);
+    }
 }
 
