@@ -154,33 +154,33 @@ class ParticipantController extends AbstractController
         ]);
     }
 
-<<<<<<< HEAD
-    /**
-     * @Route("/essai", name ="essai")
-     * @param EntityManagerInterface $entityManager
-     */
-    public function extraireFichierCsv(EntityManagerInterface $entityManager)
-    {
 
-        $id = 1
-        $repo = $entityManager->getRepository(Participant::class);
-        $util1 = $repo->find($id);
+//    /**
+//     * @Route("/essai", name ="essai")
+//     * @param EntityManagerInterface $entityManager
+//     */
+//    public function extraireFichierCsv(EntityManagerInterface $entityManager)
+//    {
+//
+//        $id = 1
+//        $repo = $entityManager->getRepository(Participant::class);
+//        $util1 = $repo->find($id);
+//
+////        $util1 = 'essai';
+//
+//        // creation d'un serializers csv
+//        $encoders = [new CsvEncoder()];
+//        $normalizers = [new ObjectNormalizer()];
+//        $serializer = new Serializer($normalizers, $encoders);
+//
+////        $userCsv = $serializer->serialize($util1, 'csv');
+//
+//        var_dump($util1);
+////        echo ($userCsv);
+//        die();
+//    }
+//
 
-//        $util1 = 'essai';
-
-        // creation d'un serializers csv
-        $encoders = [new CsvEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
-
-//        $userCsv = $serializer->serialize($util1, 'csv');
-
-        var_dump($util1);
-//        echo ($userCsv);
-        die();
-    }
-
-=======
 
     /**
      * @Route("/gestion/liste/{id}", name = "desactiver")
@@ -218,6 +218,6 @@ class ParticipantController extends AbstractController
 
         return $this->redirectToRoute('liste', ['id'=>$id]);
     }
->>>>>>> f1fcdbb9216632817d9c05f306187d203a6826e9
+
 }
 
