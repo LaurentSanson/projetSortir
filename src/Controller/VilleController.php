@@ -32,22 +32,14 @@ class VilleController extends AbstractController
      */
     public function nouvelleVille(EntityManagerInterface $em, Request $request)
     {
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
 
-
-        $data = json_decode($request->getContent(), true);
         $ville = new Ville();
-
-//        $request->request->replace(is_array($data) ? $data : array());
         $villeForm = $this->createForm(VilleType::class, $ville);
-//        $ville = $serializer->deserialize($data, Ville::class, 'xml');
         $villeForm->handleRequest($request);
 
 
-        if ($villeForm->isSubmitted() && $villeForm->isValid()) {
-            $ville->setNom($data["nom"]);
+        if ($villeForm->isSubmitted() ) {
+            $ville->setNom($_POST['ville']['nom']);
             $em->persist($ville);
             $em->flush();
             $this->addFlash("success", "Votre ville a bien été ajoutée !");
