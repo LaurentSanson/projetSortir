@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
+use App\Entity\Ville;
+use App\Essai\Util;
 use App\Form\ParticipantType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +14,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -150,35 +157,65 @@ class ParticipantController extends AbstractController
         $participants = $participantsRepo->findAll();
 
         return $this->render("participant/liste.html.twig", [
-            'participants'=> $participants,
+            'participants' => $participants,
         ]);
     }
 
 
-//    /**
-//     * @Route("/essai", name ="essai")
-//     * @param EntityManagerInterface $entityManager
-//     */
-//    public function extraireFichierCsv(EntityManagerInterface $entityManager)
-//    {
+    /**
+     * @Route("/essai", name ="essai")
+     * @param EntityManagerInterface $entityManager
+     * @throws ExceptionInterface
+     */
+    public function extraireFichierCsv(EntityManagerInterface $entityManager)
+    {
+
+        $user = new Util();
+        $user->setNom('Jones');
+        $user->setPrenom('Paul');
+        $user->setEmail('azerty@azerty.fr');
+
+        $user2 = new Util();
+        $user2->setNom('Bob');
+        $user2->setPrenom('Bob');
+        $user2->setEmail('bob@bob.fr');
+
+//        $user = new Participant();
+//        $user->setPseudo('bob');
 //
-//        $id = 1
-//        $repo = $entityManager->getRepository(Participant::class);
-//        $util1 = $repo->find($id);
-//
-////        $util1 = 'essai';
-//
-//        // creation d'un serializers csv
-//        $encoders = [new CsvEncoder()];
-//        $normalizers = [new ObjectNormalizer()];
-//        $serializer = new Serializer($normalizers, $encoders);
-//
-////        $userCsv = $serializer->serialize($util1, 'csv');
-//
-//        var_dump($util1);
-////        echo ($userCsv);
-//        die();
-//    }
+//        $user2 = new Participant();
+//        $user2->setPseudo('marc');
+
+        $listUser = [$user, $user2];
+
+//        dump($listUser);
+
+        $encoders = [new CsvEncoder(), new JsonEncoder(), new XmlEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $userCsv = $serializer->serialize($listUser, 'csv');
+        dump($userCsv);
+
+        $Users = $serializer->decode($userCsv, 'csv');
+
+        foreach ($Users as $user ){
+            $userObj = $serializer->denormalize($user,Util::class);
+            $partcipant = new Participant();
+            $partcipant->setPseudo($userObj->getNom());
+            $partcipant->setPrenom($userObj->getPrenom());
+            $partcipant->setMail($userObj->getEmail());
+            dump($partcipant);
+//            dump($userObj);
+        }
+
+//        dump($user);
+//        dump($userCsv);
+//        dump($userObj);
+//        dump($userObj2);
+        die();
+
+    }
 
 
     /**
@@ -197,7 +234,7 @@ class ParticipantController extends AbstractController
 
         $em->flush();
 
-        return $this->redirectToRoute('liste', ['id'=>$id]);
+        return $this->redirectToRoute('liste', ['id' => $id]);
     }
 
 
@@ -219,7 +256,7 @@ class ParticipantController extends AbstractController
 
         $em->flush();
 
-        return $this->redirectToRoute('liste', ['id'=>$id]);
+        return $this->redirectToRoute('liste', ['id' => $id]);
     }
 
 }
