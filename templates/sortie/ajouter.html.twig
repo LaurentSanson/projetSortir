@@ -25,7 +25,8 @@
         <div class="text-center">
             <button type="submit" name="enregistrer">Enregister</button>
             <button type="submit" name="publier">Publier la sortie</button>
-            {{ form_end(sortieForm, {'render_rest': false}) }}
+{#            {{ form_end(sortieForm, {'render_rest': false}) }}#}
+            {{ form_end(sortieForm) }}
         </div>
     </div>
 {% endblock %}

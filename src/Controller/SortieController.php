@@ -58,6 +58,8 @@ class SortieController extends AbstractController
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
+            dump('111');
+
             $user = $this->getUser();
             $site = $this->getUser()->getSite();
             if (isset($_POST['enregistrer'])){
@@ -237,14 +239,19 @@ class SortieController extends AbstractController
         $repo = $em->getRepository(Sortie::class);
         $sortie = $repo->find($id);
 
-        $etatRepo = $em->getRepository(Etat::class);
-        $etat = $etatRepo->find(6);
+
+       // dump($etat);
 
 
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
+        $etatRepo = $em->getRepository(Etat::class);
+        $etat = $etatRepo->find(6);
+
+
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()){
+
             //on change l'état à "annulée"
             $sortie->setEtat($etat);
             //on retire les participants inscrits

@@ -48,10 +48,10 @@ class Sortie
      */
     private $descriptionInfos;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $urlPhoto;
+//    /**
+//     * @ORM\Column(type="string", length=255, nullable=true)
+//     */
+//    private $urlPhoto;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Participant", mappedBy="sortie")
@@ -174,17 +174,17 @@ class Sortie
         return $this;
     }
 
-    public function getUrlPhoto(): ?string
-    {
-        return $this->urlPhoto;
-    }
-
-    public function setUrlPhoto(?string $urlPhoto): self
-    {
-        $this->urlPhoto = $urlPhoto;
-
-        return $this;
-    }
+//    public function getUrlPhoto(): ?string
+//    {
+//        return $this->urlPhoto;
+//    }
+//
+//    public function setUrlPhoto(?string $urlPhoto): self
+//    {
+//        $this->urlPhoto = $urlPhoto;
+//
+//        return $this;
+//    }
 
     /**
      * @return Collection|Participant[]

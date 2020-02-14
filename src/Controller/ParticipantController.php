@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
+use App\Entity\Site;
 use App\Entity\Ville;
 use App\Essai\Util;
 use App\Form\ParticipantType;
@@ -170,29 +171,37 @@ class ParticipantController extends AbstractController
      */
     public function extraireFichierCsv(EntityManagerInterface $entityManager)
     {
+        $user = new Participant();
+        $site = new Site();
+        $listUser = [];
 
-        $user = new Util();
-        $user->setNom('Jones');
-        $user->setPrenom('Paul');
-        $user->setEmail('azerty@azerty.fr');
-
-        $user2 = new Util();
-        $user2->setNom('Bob');
-        $user2->setPrenom('Bob');
-        $user2->setEmail('bob@bob.fr');
-
-        $listUser = [$user, $user2];
-
-        dump($listUser);
+        $handle = fopen("participant.csv", "r");
+        while (($data = fgetcsv($handle, 100, ',')) !== false) {
+            // pseudo,password,nom,prenom,telephone,email,site
+            if (trim($data[0]) != 'pseudo') {
+                $user->setPseudo(trim($data[0]));
+                $user->setPassword(trim($data[1]));
+                $user->setNom(trim($data[2]));
+                $user->setPrenom(trim($data[3]));
+                $user->setTelephone(trim($data[4]));
+                $user->setMail(trim($data[5]));
+//            $site->setNom(trim($data[6]));
+//            $user->setSite($site);
+                $user->setActif(true);
+                dump($data);
+                dump($user);
+            }
+        }
+        die();
 
         $encoders = [new CsvEncoder(), new JsonEncoder(), new XmlEncoder()];
         $normalizers = [new ObjectNormalizer()];
         $serializer = new Serializer($normalizers, $encoders);
 
-        $userCsv = $serializer->serialize($listUser, 'csv');
-        dump($userCsv);
+        //$userCsv = $serializer->serialize($listUser, 'csv');
+        //dump($userCsv);
 
-        $Users = $serializer->decode($userCsv, 'csv');
+        $Users = $serializer->decode($listUser, 'csv');
 
         foreach ($Users as $user) {
             $userObj = $serializer->denormalize($user, Util::class);
