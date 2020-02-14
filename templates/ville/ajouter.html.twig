@@ -38,7 +38,7 @@
                     if (results.length) {
                         $(erroMessage).text('').hide();
                         $.each(results, function (key, value) {
-                            console.log(value.nom);
+                            // console.log(value.nom);
                             $(ville).append('<option value="' + value.nom + '">' + value.nom + '</option>');
                         });
                     } else {
@@ -56,7 +56,7 @@
             })
 
             var validation = $('#validation');
-            $(validation).submit(console.log($(ville)))
+            $(validation).submit(console.log($(ville)));
         })
 
     </script>
