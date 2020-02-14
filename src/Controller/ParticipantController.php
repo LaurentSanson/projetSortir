@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Entity\Site;
-use App\Entity\Ville;
 use App\Essai\Util;
 use App\Form\ParticipantType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,8 +17,6 @@ use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
