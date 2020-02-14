@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Site;
 use App\Entity\Sortie;
+use App\Form\AnnulerType;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -57,19 +58,20 @@ class SortieController extends AbstractController
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-
-            dump('111');
-
+            
             $user = $this->getUser();
             $site = $this->getUser()->getSite();
             if (isset($_POST['enregistrer'])){
                 $etat = $em->getRepository(Etat::class)->find(1);
-            }elseif ($_POST['publier']){
+                $sortie->setEtat($etat);
+            }elseif (isset($_POST['publier'])){
                 $etat = $em->getRepository(Etat::class)->find(2);
+
+                $sortie->setEtat($etat);
             }
             $sortie->setOrganisateur($user);
             $sortie->setSite($site);
-            $sortie->setEtat($etat);
+
             $em->persist($sortie);
             $em->flush();
             $this->addFlash("success", "Votre sortie a bien été ajoutée !");
@@ -243,7 +245,7 @@ class SortieController extends AbstractController
        // dump($etat);
 
 
-        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm = $this->createForm(AnnulerType::class, $sortie);
         $sortieForm->handleRequest($request);
 
         $etatRepo = $em->getRepository(Etat::class);
