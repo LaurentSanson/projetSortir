@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Site;
 use App\Entity\Sortie;
+use App\Form\AnnulerType;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -243,7 +244,7 @@ class SortieController extends AbstractController
        // dump($etat);
 
 
-        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm = $this->createForm(AnnulerType::class, $sortie);
         $sortieForm->handleRequest($request);
 
         $etatRepo = $em->getRepository(Etat::class);

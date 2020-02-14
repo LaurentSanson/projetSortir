@@ -108,7 +108,7 @@
                         {% endif %}
 
 
-                        {% if user.id == sortie.organisateur.id and (sortie.etat == "Ouverte" or sortie.etat == "Créee") %}
+                        {% if user.id == sortie.organisateur.id and (sortie.etat == "Ouverte" or sortie.etat == "Créee") or is_granted('ROLE_ADMIN') %}
                             <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
                             {#                                                <a href="#" #}
                             {#                           onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a>#}
