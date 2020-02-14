@@ -57,19 +57,20 @@ class SortieController extends AbstractController
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-
-            dump('111');
-
+            
             $user = $this->getUser();
             $site = $this->getUser()->getSite();
             if (isset($_POST['enregistrer'])){
                 $etat = $em->getRepository(Etat::class)->find(1);
-            }elseif ($_POST['publier']){
+                $sortie->setEtat($etat);
+            }elseif (isset($_POST['publier'])){
                 $etat = $em->getRepository(Etat::class)->find(2);
+
+                $sortie->setEtat($etat);
             }
             $sortie->setOrganisateur($user);
             $sortie->setSite($site);
-            $sortie->setEtat($etat);
+
             $em->persist($sortie);
             $em->flush();
             $this->addFlash("success", "Votre sortie a bien été ajoutée !");
