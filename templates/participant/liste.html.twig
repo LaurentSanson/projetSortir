@@ -44,12 +44,12 @@
                             <a href="#"
                                onclick=" $.ajax('{{ path('activer', {'id':participant.id}) }}').done(function(){
                                    location.reload();
-                                   console.log('ok !!!!')
                                }); ">activer</a>
                             {% endif %}
 
                         {% endif %}
                     </td>
+
                 </tr>
                 </tbody>
             {% endfor %}

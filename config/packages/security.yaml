@@ -15,10 +15,12 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            user_checker: App\Security\UserChecker
             anonymous: lazy
             guard:
                 authenticators:
                     - App\Security\ParticipantAuthenticator
+
             logout:
                 path: app_logout
                 target: main

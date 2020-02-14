@@ -58,6 +58,7 @@ class ParticipantController extends AbstractController
 
         return $this->render('participant/profil.html.twig', [
             'participant' => $participant,
+
         ]);
     }
 
@@ -180,15 +181,9 @@ class ParticipantController extends AbstractController
         $user2->setPrenom('Bob');
         $user2->setEmail('bob@bob.fr');
 
-//        $user = new Participant();
-//        $user->setPseudo('bob');
-//
-//        $user2 = new Participant();
-//        $user2->setPseudo('marc');
-
         $listUser = [$user, $user2];
 
-//        dump($listUser);
+        dump($listUser);
 
         $encoders = [new CsvEncoder(), new JsonEncoder(), new XmlEncoder()];
         $normalizers = [new ObjectNormalizer()];
@@ -199,22 +194,16 @@ class ParticipantController extends AbstractController
 
         $Users = $serializer->decode($userCsv, 'csv');
 
-        foreach ($Users as $user ){
-            $userObj = $serializer->denormalize($user,Util::class);
+        foreach ($Users as $user) {
+            $userObj = $serializer->denormalize($user, Util::class);
             $partcipant = new Participant();
             $partcipant->setPseudo($userObj->getNom());
             $partcipant->setPrenom($userObj->getPrenom());
             $partcipant->setMail($userObj->getEmail());
             dump($partcipant);
-//            dump($userObj);
         }
 
-//        dump($user);
-//        dump($userCsv);
-//        dump($userObj);
-//        dump($userObj2);
         die();
-
     }
 
 
@@ -234,6 +223,7 @@ class ParticipantController extends AbstractController
 
         $em->flush();
 
+        $this->addFlash("warning", "Le participant est maintenant inactif");
         return $this->redirectToRoute('liste', ['id' => $id]);
     }
 
@@ -259,5 +249,31 @@ class ParticipantController extends AbstractController
         return $this->redirectToRoute('liste', ['id' => $id]);
     }
 
+
+    /**
+     * @Route("/gestion/participant/supprimer/{id}", name = "supprimer")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function supprimerParticipant($id, EntityManagerInterface $em)
+    {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $participant = $em->getRepository(Participant::class)->find($id);
+
+        if ($participant->getSortie()->count() == 0 && $participant->getOrganisateurSortie()->count() == 0) {
+            $em->remove($participant);
+            $em->flush();
+            $this->addFlash('success', 'Utilisateur supprimé');
+            return $this->redirectToRoute('liste');
+        } else {
+            $this->addFlash('warning', 'l\'utilisateur a encore des activités en cours');
+        }
+
+        return $this->redirectToRoute('liste');
+
+    }
 }
 
