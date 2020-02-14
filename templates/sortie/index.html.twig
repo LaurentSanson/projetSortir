@@ -93,7 +93,7 @@
                         <a href="{{ path('profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur }}</a></th>
                     {% endif %}
                     <td>
-                        {% if (sortie.etat.libelle != "Ouverte") %}
+                        {% if (sortie.etat.libelle != "ouverte") %}
                         {% else %}
                             {% if inscrit == 1 %}
                                 <a href="#"

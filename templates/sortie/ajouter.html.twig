@@ -17,9 +17,6 @@
             {{ form_row(sortieForm.nbInscriptionsMax) }}
             {{ form_row(sortieForm.descriptionInfos) }}
             {{ form_row(sortieForm.lieu) }}
-
-            {{ form_row(sortieForm._token) }}
-
             <div class="text-right">
                 <button><a href="{{ path('nouveauLieu') }}">Ajouter un lieu</a></button>
             </div>
@@ -27,8 +24,7 @@
         <div class="text-center">
             <button type="submit" name="enregistrer">Enregister</button>
             <button type="submit" name="publier">Publier la sortie</button>
-            {{ form_end(sortieForm, {'render_rest': false}) }}
-{#            {{ form_end(sortieForm) }}#}
+            {{ form_end(sortieForm) }}
         </div>
     </div>
 {% endblock %}
