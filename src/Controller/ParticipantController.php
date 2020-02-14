@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
+use App\Entity\Site;
+use App\Entity\Ville;
+use App\Essai\Util;
 use App\Form\ParticipantType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +15,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
@@ -51,6 +59,7 @@ class ParticipantController extends AbstractController
 
         return $this->render('participant/profil.html.twig', [
             'participant' => $participant,
+
         ]);
     }
 
@@ -150,37 +159,61 @@ class ParticipantController extends AbstractController
         $participants = $participantsRepo->findAll();
 
         return $this->render("participant/liste.html.twig", [
-            'participants'=> $participants,
+            'participants' => $participants,
         ]);
     }
 
 
+    /**
+     * @Route("/essai", name ="essai")
+     * @param EntityManagerInterface $entityManager
+     * @throws ExceptionInterface
+     */
+    public function extraireFichierCsv(EntityManagerInterface $entityManager)
+    {
+        $user = new Participant();
+        $site = new Site();
+        $listUser = [];
 
-//    /**
-//     * @Route("/essai", name ="essai")
-//     * @param EntityManagerInterface $entityManager
-//     */
-//    public function extraireFichierCsv(EntityManagerInterface $entityManager)
-//    {
-//
-//        $id = 1
-//        $repo = $entityManager->getRepository(Participant::class);
-//        $util1 = $repo->find($id);
-//
-////        $util1 = 'essai';
-//
-//        // creation d'un serializers csv
-//        $encoders = [new CsvEncoder()];
-//        $normalizers = [new ObjectNormalizer()];
-//        $serializer = new Serializer($normalizers, $encoders);
-//
-////        $userCsv = $serializer->serialize($util1, 'csv');
-//
-//        var_dump($util1);
-////        echo ($userCsv);
-//        die();
-//    }
+        $handle = fopen("participant.csv", "r");
+        while (($data = fgetcsv($handle, 100, ',')) !== false) {
+            // pseudo,password,nom,prenom,telephone,email,site
+            if (trim($data[0]) != 'pseudo') {
+                $user->setPseudo(trim($data[0]));
+                $user->setPassword(trim($data[1]));
+                $user->setNom(trim($data[2]));
+                $user->setPrenom(trim($data[3]));
+                $user->setTelephone(trim($data[4]));
+                $user->setMail(trim($data[5]));
+//            $site->setNom(trim($data[6]));
+//            $user->setSite($site);
+                $user->setActif(true);
+                dump($data);
+                dump($user);
+            }
+        }
+        die();
 
+        $encoders = [new CsvEncoder(), new JsonEncoder(), new XmlEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+
+        //$userCsv = $serializer->serialize($listUser, 'csv');
+        //dump($userCsv);
+
+        $Users = $serializer->decode($listUser, 'csv');
+
+        foreach ($Users as $user) {
+            $userObj = $serializer->denormalize($user, Util::class);
+            $partcipant = new Participant();
+            $partcipant->setPseudo($userObj->getNom());
+            $partcipant->setPrenom($userObj->getPrenom());
+            $partcipant->setMail($userObj->getEmail());
+            dump($partcipant);
+        }
+
+        die();
+    }
 
 
     /**
@@ -199,7 +232,8 @@ class ParticipantController extends AbstractController
 
         $em->flush();
 
-        return $this->redirectToRoute('liste', ['id'=>$id]);
+        $this->addFlash("warning", "Le participant est maintenant inactif");
+        return $this->redirectToRoute('liste', ['id' => $id]);
     }
 
 
@@ -221,8 +255,34 @@ class ParticipantController extends AbstractController
 
         $em->flush();
 
-        return $this->redirectToRoute('liste', ['id'=>$id]);
+        return $this->redirectToRoute('liste', ['id' => $id]);
     }
 
+
+    /**
+     * @Route("/gestion/participant/supprimer/{id}", name = "supprimer")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
+     */
+    public function supprimerParticipant($id, EntityManagerInterface $em)
+    {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $participant = $em->getRepository(Participant::class)->find($id);
+
+        if ($participant->getSortie()->count() == 0 && $participant->getOrganisateurSortie()->count() == 0) {
+            $em->remove($participant);
+            $em->flush();
+            $this->addFlash('success', 'Utilisateur supprimé');
+            return $this->redirectToRoute('liste');
+        } else {
+            $this->addFlash('warning', 'l\'utilisateur a encore des activités en cours');
+        }
+
+        return $this->redirectToRoute('liste');
+
+    }
 }
 

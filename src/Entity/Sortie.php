@@ -48,7 +48,6 @@ class Sortie
      */
     private $descriptionInfos;
 
-
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Participant", mappedBy="sortie")
      */
