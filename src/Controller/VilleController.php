@@ -8,6 +8,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class VilleController extends AbstractController
 {
@@ -28,14 +32,26 @@ class VilleController extends AbstractController
      */
     public function nouvelleVille(EntityManagerInterface $em, Request $request)
     {
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+
+
+        $data = json_decode($request->getContent(), true);
         $ville = new Ville();
+
+//        $request->request->replace(is_array($data) ? $data : array());
         $villeForm = $this->createForm(VilleType::class, $ville);
+//        $ville = $serializer->deserialize($data, Ville::class, 'xml');
         $villeForm->handleRequest($request);
-        if ($villeForm->isSubmitted() && $villeForm->isValid()){
+
+
+        if ($villeForm->isSubmitted() && $villeForm->isValid()) {
+            $ville->setNom($data["nom"]);
             $em->persist($ville);
             $em->flush();
             $this->addFlash("success", "Votre ville a bien été ajoutée !");
-            return $this->redirectToRoute('nouveauLieu', array('id'=>$ville->getId()));
+            return $this->redirectToRoute('nouveauLieu', array('id' => $ville->getId()));
         }
         return $this->render('ville/ajouter.html.twig', [
             'villeForm' => $villeForm->createView()

@@ -8,20 +8,56 @@
 
     <h3>Ajouter une ville</h3>
     <div>
-        {{ form_start(villeForm) }}
+        {{ form_start(villeForm, {'attr' : {'id': 'validation'}}) }}
         {{ form_widget(villeForm) }}
         <button type="submit">Valider</button>
         {{ form_end(villeForm) }}
+        <div style="display: none; color: red" id="errorMessage"></div>
     </div>
 
 {% endblock %}
 
 {% block javascripts %}
     <script type="text/javascript">
-        var ville = document.getElementById("nom");
+        $(document).ready(function () {
+            const apiUrl = 'https://geo.api.gouv.fr/communes?codePostal=';
+            const format = "&format=json"
+            var ville = $('#ville_nom')
+            var codePostal = $('#ville_codePostal');
+            var erroMessage = $('#errorMessage');
+            
+            $(codePostal).blur(function () {
+                var code = $(this).val();
+                // console.log(choixVille);
+                var url = apiUrl + code + format;
+                //console.log(url);
 
-        ajaxGet("https://geo.api.gouv.fr/communes?nom=Nantes&fields=departement&boost=population&limit=5", function (response) {
-           var ville = JSON.parse(response);
-        });
+                fetch(url, {method: 'get'}).then(response => response.json()).then(results => {
+                    // console.log(results)
+                    $(ville).find('option').remove();
+                    if (results.length) {
+                        $(erroMessage).text('').hide();
+                        $.each(results, function (key, value) {
+                            console.log(value.nom);
+                            $(ville).append('<option value="' + value.nom + '">' + value.nom + '</option>');
+                        });
+                    } else {
+                        if ($(codePostal).val()) {
+                            //console.log('Erreur de code postal');
+                            $(errorMessage).text('Aucune commune avec ce code postal.').show();
+                        } else {
+                            $(erroMessage).text('').hide();
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    $(ville).find('option').remove();
+                });
+            })
+
+            var validation = $('#validation');
+            $(validation).submit(console.log($(ville)))
+        })
+
     </script>
 {% endblock %}
