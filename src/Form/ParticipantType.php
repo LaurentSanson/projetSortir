@@ -43,8 +43,7 @@ class ParticipantType extends AbstractType
                     ])
                 ]
             ])
-            ->add('Enregistrer', SubmitType::class)
-        ;
+            ->add('Enregistrer', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
