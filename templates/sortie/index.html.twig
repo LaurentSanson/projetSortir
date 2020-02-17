@@ -57,11 +57,11 @@
         <tr>
             <th scope="col">Nom de la sortie</th>
             <th scope="col">Date de la sortie</th>
-            <th scope="col">Clôture</th>
-            <th scope="col">Inscrits/Places</th>
-            <th scope="col">Etat</th>
-            <th scope="col">Inscrit</th>
-            <th scope="col">Organisateur</th>
+            <th scope="col" class="display-tbl">Clôture</th>
+            <th scope="col" class="display-tbl">Inscrits/Places</th>
+            <th scope="col" class="display-tbl">Etat</th>
+            <th scope="col" class="display-tbl">Inscrit</th>
+            <th scope="col" class="display-tbl">Organisateur</th>
             <th scope="col">Actions</th>
         </tr>
         </thead>
@@ -72,12 +72,14 @@
 
             {% else %}
                 <tr>
+                    //display des éléments du tableau
                     <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>
                     <th scope="row">{{ sortie.dateDebut|date('d-m-Y') }}</th>
-                    <th scope="row">{{ sortie.dateCloture|date('d-m-Y') }}</th>
-                    <th scope="row">{{ sortie.participants.count }} / {{ sortie.nbInscriptionsMax }}</th>
-                    <th scope="row">{{ sortie.etat }}</th>
-                    <th>
+                    <th scope="row" class="display-tbl">{{ sortie.dateCloture|date('d-m-Y') }}</th>
+                    <th scope="row" class="display-tbl">{{ sortie.participants.count }}
+                        / {{ sortie.nbInscriptionsMax }}</th>
+                    <th scope="row" class="display-tbl">{{ sortie.etat }}</th>
+                    <th scope="row" class="display-tbl">
                         {% set inscrit = 0 %}
                         {% for participant in sortie.participants %}
                             {% if participant.id == user.id %}
@@ -86,13 +88,15 @@
                             {% endif %}
                         {% endfor %}
                     </th>
-                    <th scope="row">
+                    <th scope="row" class="display-tbl">
                         {% if app.user == sortie.organisateur %}
                         {{ sortie.organisateur }}
                         {% else %}
-                        <a href="{{ path('profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur }}</a></th>
+                        <a href="{{ path('profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur }}</a>
+                    </th>
                     {% endif %}
-                    <td>
+                    <td scope="row">
+                        //boutons suivant si on est inscrit ou non à la sortie
                         {% if (sortie.etat.libelle != "ouverte") %}
                         {% else %}
                             {% if inscrit == 1 %}
@@ -106,10 +110,22 @@
                                 {% endif %}
                             {% endif %}
                         {% endif %}
-                        {% if user.id == sortie.organisateur.id and (sortie.etat == "Ouverte" or sortie.etat == "Créee") or is_granted('ROLE_ADMIN') %}
+                        //boutons selon l'état de la sortie et qui est connecté
+                        {% if user.id == sortie.organisateur.id and (sortie.etat == "ouverte" or sortie.etat == "Crée")  %}
                             <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
-                            {#                                                <a href="#" #}
-                            {#                           onclick="$.ajax('{{ path('effacerSortie', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Supprimer</a>#}
+
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') and (sortie.etat == "ouverte" or sortie.etat == "Crée")  %}
+                            <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
+
+                        {% endif %}
+                        {% if (user.id == sortie.organisateur.id and sortie.etat == "Crée" ) %}
+                            <a href="{{ path('publier', {'id':sortie.id}) }}">Publier</a>
+
+                        {% endif %}
+                        {% if (is_granted('ROLE_ADMIN') and sortie.etat == "Crée" ) %}
+                            <a href="{{ path('publier', {'id':sortie.id}) }}">Publier</a>
+
                         {% endif %}
 
 

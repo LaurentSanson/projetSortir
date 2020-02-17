@@ -13,11 +13,19 @@
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mariadb://10.27.200.15:3306/projetsortir</jdbc-url>
     </data-source>
+<<<<<<< HEAD
+    <data-source source="LOCAL" name="projetsortir@10.27.200.8" uuid="12570ebc-070e-4ac5-9e91-e46f52ebcea6">
+      <driver-ref>mariadb</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://10.27.200.8:3306/projetsortir</jdbc-url>
+=======
     <data-source source="LOCAL" name="projetsortir@10.27.200.8" uuid="c9d7e2ec-139a-4082-8493-ba6360c2528a">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://10.27.200.8:3306/projetsortir</jdbc-url>
+>>>>>>> 3ae6f19579862614e56e11d3cf3edd7f5babcd5e
     </data-source>
   </component>
 </project>
