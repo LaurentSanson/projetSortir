@@ -164,13 +164,11 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/essai", name ="essai")
      * @param EntityManagerInterface $entityManager
-     * @throws ExceptionInterface
+     * @param UserPasswordEncoderInterface $passwordEncoder
      */
-    public function extraireFichierCsv(EntityManagerInterface $entityManager)
+    public function extraireFichierCsv(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = new Participant();
-        $site = new Site();
-        $listUser = [];
 
         $handle = fopen("participant.csv", "r");
         while (($data = fgetcsv($handle, 100, ',')) !== false) {
@@ -182,34 +180,50 @@ class ParticipantController extends AbstractController
                 $user->setPrenom(trim($data[3]));
                 $user->setTelephone(trim($data[4]));
                 $user->setMail(trim($data[5]));
-//            $site->setNom(trim($data[6]));
-//            $user->setSite($site);
-                $user->setActif(true);
-                dump($data);
+
                 dump($user);
+
+                // recherche site en BDD
+                $repo = $entityManager->getRepository(Site::class);
+                $siteBDD = $repo->findOneBy([
+                    'nom' => $data[6]
+                ]);
+
+                if ($siteBDD != null) {
+                    $user->setSite($siteBDD);
+                } else {
+                    $newSite = new Site();
+                    $newSite->setNom(trim($data[6]));
+                    $user->setSite($newSite);
+                }
+
+                $hash = $passwordEncoder->encodePassword($user, $user->getPassword());
+                $user->setPassword($hash);
+                $user->setActif(true);
+
+                $entityManager->persist($user);
+                $entityManager->flush();
             }
         }
         die();
 
-        $encoders = [new CsvEncoder(), new JsonEncoder(), new XmlEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
-
-        //$userCsv = $serializer->serialize($listUser, 'csv');
-        //dump($userCsv);
-
-        $Users = $serializer->decode($listUser, 'csv');
-
-        foreach ($Users as $user) {
-            $userObj = $serializer->denormalize($user, Util::class);
-            $partcipant = new Participant();
-            $partcipant->setPseudo($userObj->getNom());
-            $partcipant->setPrenom($userObj->getPrenom());
-            $partcipant->setMail($userObj->getEmail());
-            dump($partcipant);
-        }
-
-        die();
+        // code pour encoder
+//        $encoders = [new CsvEncoder(), new JsonEncoder(), new XmlEncoder()];
+//        $normalizers = [new ObjectNormalizer()];
+//        $serializer = new Serializer($normalizers, $encoders);
+//
+//        $userCsv = $serializer->serialize($listUser, 'csv');
+//        dump($userCsv);
+//
+//        $Users = $serializer->decode($listUser, 'csv');
+//
+//        foreach ($Users as $user) {
+//            $userObj = $serializer->denormalize($user, Util::class);
+//            $partcipant = new Participant();
+//            $partcipant->setPseudo($userObj->getNom());
+//            $partcipant->setPrenom($userObj->getPrenom());
+//            $partcipant->setMail($userObj->getEmail());
+//        }
     }
 
 
