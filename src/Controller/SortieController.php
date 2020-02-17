@@ -58,13 +58,13 @@ class SortieController extends AbstractController
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-            
+
             $user = $this->getUser();
             $site = $this->getUser()->getSite();
-            if (isset($_POST['enregistrer'])){
+            if (isset($_POST['enregistrer'])) {
                 $etat = $em->getRepository(Etat::class)->find(1);
                 $sortie->setEtat($etat);
-            }elseif (isset($_POST['publier'])){
+            } elseif (isset($_POST['publier'])) {
                 $etat = $em->getRepository(Etat::class)->find(2);
 
                 $sortie->setEtat($etat);
@@ -76,11 +76,31 @@ class SortieController extends AbstractController
             $em->flush();
             $this->addFlash("success", "Votre sortie a bien été ajoutée !");
 
-            return $this->redirectToRoute('detailSortie', array('id' => $sortie->getId()));
+            return $this->redirectToRoute('sortie');
         }
-        return $this->render('sortie/ajouter.html.twig', [
+        return $this->render('sortie/modifier.html.twig', [
             'sortieForm' => $sortieForm->createView(),
         ]);
+    }
+
+
+    /**
+     * @Route("/publier/{id}", name="publier")
+     */
+    public function publierSortie($id, EntityManagerInterface $em)
+    {
+        $repo = $em->getRepository(Sortie::class);
+        $sortie = $repo->find($id);
+
+
+        $etat = $em->getRepository(Etat::class)->find(2);
+        $sortie->setEtat($etat);
+
+        $em->flush();
+
+        $this->addFlash("success", "sortie publiée!");
+        return $this->redirectToRoute('detailSortie', ['id' => $id]);
+
     }
 
     /**
@@ -94,8 +114,8 @@ class SortieController extends AbstractController
 
         //renvoyer sur page annulée si sortie annulée
         $etatId = $sortie->getEtat()->getId();
-        if($etatId == 6){
-            return $this->render("sortie/detailAnnulee.html.twig", [ 'sortie'=> $sortie]);
+        if ($etatId == 6) {
+            return $this->render("sortie/detailAnnulee.html.twig", ['sortie' => $sortie]);
         }
 
         //affichage des options participant sur la page détail sortie
@@ -218,7 +238,7 @@ class SortieController extends AbstractController
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $em->flush();
 
@@ -226,9 +246,9 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('detailSortie', ['id' => $id]);
         }
 
-        return $this->render('sortie/modifier.html.twig',[
-            'sortieForm'=> $form->createView(),
-            'sortie'=> $sortie,
+        return $this->render('sortie/modifier.html.twig', [
+            'sortieForm' => $form->createView(),
+            'sortie' => $sortie,
 
         ]);
     }
@@ -241,10 +261,6 @@ class SortieController extends AbstractController
         $repo = $em->getRepository(Sortie::class);
         $sortie = $repo->find($id);
 
-
-       // dump($etat);
-
-
         $sortieForm = $this->createForm(AnnulerType::class, $sortie);
         $sortieForm->handleRequest($request);
 
@@ -252,24 +268,24 @@ class SortieController extends AbstractController
         $etat = $etatRepo->find(6);
 
 
-        if ($sortieForm->isSubmitted() && $sortieForm->isValid()){
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
             //on change l'état à "annulée"
             $sortie->setEtat($etat);
             //on retire les participants inscrits
             $participants = $sortie->getParticipants();
-            foreach($participants as $participant){
+            foreach ($participants as $participant) {
                 $sortie->removeParticipant($participant);
             }
 
             $em->flush();
             $this->addFlash("success", "sortie annulée");
-            return $this->redirectToRoute('sortie', ['id'=> $id]);
+            return $this->redirectToRoute('sortie', ['id' => $id]);
         }
 
         return $this->render('sortie/annuler.html.twig', [
-            'sortieForm'=> $sortieForm->createView(),
-            'sortie'=>$sortie,
+            'sortieForm' => $sortieForm->createView(),
+            'sortie' => $sortie,
         ]);
 
     }
