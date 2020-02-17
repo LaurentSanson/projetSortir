@@ -164,13 +164,11 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/essai", name ="essai")
      * @param EntityManagerInterface $entityManager
-     * @throws ExceptionInterface
+     * @param UserPasswordEncoderInterface $passwordEncoder
      */
-    public function extraireFichierCsv(EntityManagerInterface $entityManager)
+    public function extraireFichierCsv(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = new Participant();
-        $site = new Site();
-        $listUser = [];
 
         $handle = fopen("participant.csv", "r");
         while (($data = fgetcsv($handle, 100, ',')) !== false) {
@@ -183,7 +181,7 @@ class ParticipantController extends AbstractController
                 $user->setTelephone(trim($data[4]));
                 $user->setMail(trim($data[5]));
 
-                dump($data[6]);
+                dump($user);
 
                 // recherche site en BDD
                 $repo = $entityManager->getRepository(Site::class);
@@ -194,9 +192,17 @@ class ParticipantController extends AbstractController
                 if ($siteBDD != null) {
                     $user->setSite($siteBDD);
                 } else {
-                    $site->setNom(trim($data[6]));
+                    $newSite = new Site();
+                    $newSite->setNom(trim($data[6]));
+                    $user->setSite($newSite);
                 }
+
+                $hash = $passwordEncoder->encodePassword($user, $user->getPassword());
+                $user->setPassword($hash);
                 $user->setActif(true);
+
+                $entityManager->persist($user);
+                $entityManager->flush();
             }
         }
         die();
@@ -217,9 +223,7 @@ class ParticipantController extends AbstractController
 //            $partcipant->setPseudo($userObj->getNom());
 //            $partcipant->setPrenom($userObj->getPrenom());
 //            $partcipant->setMail($userObj->getEmail());
-//            dump($partcipant);
 //        }
-//        die();
     }
 
 
