@@ -57,11 +57,11 @@
         <tr>
             <th scope="col">Nom de la sortie</th>
             <th scope="col">Date de la sortie</th>
-            <th scope="col">Clôture</th>
-            <th scope="col">Inscrits/Places</th>
-            <th scope="col">Etat</th>
-            <th scope="col">Inscrit</th>
-            <th scope="col">Organisateur</th>
+            <th scope="col" class="display-tbl">Clôture</th>
+            <th scope="col" class="display-tbl">Inscrits/Places</th>
+            <th scope="col" class="display-tbl">Etat</th>
+            <th scope="col" class="display-tbl">Inscrit</th>
+            <th scope="col" class="display-tbl">Organisateur</th>
             <th scope="col">Actions</th>
         </tr>
         </thead>
@@ -74,10 +74,11 @@
                 <tr>
                     <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>
                     <th scope="row">{{ sortie.dateDebut|date('d-m-Y') }}</th>
-                    <th scope="row">{{ sortie.dateCloture|date('d-m-Y') }}</th>
-                    <th scope="row">{{ sortie.participants.count }} / {{ sortie.nbInscriptionsMax }}</th>
-                    <th scope="row">{{ sortie.etat }}</th>
-                    <th>
+                    <th scope="row" class="display-tbl">{{ sortie.dateCloture|date('d-m-Y') }}</th>
+                    <th scope="row" class="display-tbl">{{ sortie.participants.count }}
+                        / {{ sortie.nbInscriptionsMax }}</th>
+                    <th scope="row" class="display-tbl">{{ sortie.etat }}</th>
+                    <th scope="row" class="display-tbl">
                         {% set inscrit = 0 %}
                         {% for participant in sortie.participants %}
                             {% if participant.id == user.id %}
@@ -86,13 +87,14 @@
                             {% endif %}
                         {% endfor %}
                     </th>
-                    <th scope="row">
+                    <th scope="row" class="display-tbl">
                         {% if app.user == sortie.organisateur %}
                         {{ sortie.organisateur }}
                         {% else %}
-                        <a href="{{ path('profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur }}</a></th>
+                        <a href="{{ path('profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur }}</a>
+                    </th>
                     {% endif %}
-                    <td>
+                    <td scope="row">
                         {% if (sortie.etat.libelle != "ouverte") %}
                         {% else %}
                             {% if inscrit == 1 %}
