@@ -72,7 +72,7 @@
 
             {% else %}
                 <tr>
-                    //display des éléments du tableau
+{#                    //display des éléments du tableau#}
                     <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>
                     <th scope="row">{{ sortie.dateDebut|date('d-m-Y') }}</th>
                     <th scope="row" class="display-tbl">{{ sortie.dateCloture|date('d-m-Y') }}</th>
@@ -96,7 +96,7 @@
                     </th>
                     {% endif %}
                     <td scope="row">
-                        //boutons suivant si on est inscrit ou non à la sortie
+{#                        //boutons suivant si on est inscrit ou non à la sortie#}
                         {% if (sortie.etat.libelle != "ouverte") %}
                         {% else %}
                             {% if inscrit == 1 %}
@@ -110,7 +110,7 @@
                                 {% endif %}
                             {% endif %}
                         {% endif %}
-                        //boutons selon l'état de la sortie et qui est connecté
+{#                        //boutons selon l'état de la sortie et qui est connecté#}
                         {% if user.id == sortie.organisateur.id and (sortie.etat == "ouverte" or sortie.etat == "Crée")  %}
                             <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
 

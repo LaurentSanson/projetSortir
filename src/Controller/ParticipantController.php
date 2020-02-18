@@ -80,10 +80,13 @@ class ParticipantController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            dump('ok');
+
             $password = $form->get('newPassword')->getViewData();
             $password2 = $form->get('newPassword2')->getViewData();
             $photo = $form->get('photo')->getData();
             if ($photo) {
+
                 $originalFilename = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
@@ -102,43 +105,44 @@ class ParticipantController extends AbstractController
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
                 $participant->setPhoto($newFilename);
-
-                $testPseudo = $participant->getPseudo();
-
-                //recherche si pseudo identique dans la BD
-                $repository = $entityManager->getRepository(Participant::class);
-                $testParticipant = $repository->findOneBy(
-                    ['pseudo' => $testPseudo]
-                );
-
-
-                if ($testParticipant->getId() == $participant->getId()) {
-                    $testParticipant = null;
-                }
-
-                if ($testParticipant != null) {
-                    $this->addFlash("alert-danger", "Pseudo déja utilisé");
-                } else {
-                    if ($password == $password2) {
-
-                        $participant->setPassword($password);
-
-                        $hash = $passwordEncoder->encodePassword($participant, $participant->getPassword());
-
-                        $participant->setPassword($hash);
-
-                        $entityManager->flush();
-
-                        $this->addFlash("success", "Inscription OK !");
-
-                        return $this->redirectToRoute('profil');
-                    } else {
-                        $this->addFlash("alert-danger", "Mot de passe pas identique !");
-                    }
-                }
-
             }
+
+            $testPseudo = $participant->getPseudo();
+
+            //recherche si pseudo identique dans la BD
+            $repository = $entityManager->getRepository(Participant::class);
+            $testParticipant = $repository->findOneBy(
+                ['pseudo' => $testPseudo]
+            );
+
+
+            if ($testParticipant->getId() == $participant->getId()) {
+                $testParticipant = null;
+            }
+
+            if ($testParticipant != null) {
+                $this->addFlash("alert-danger", "Pseudo déja utilisé");
+            } else {
+                if ($password == $password2) {
+
+                    $participant->setPassword($password);
+
+                    $hash = $passwordEncoder->encodePassword($participant, $participant->getPassword());
+
+                    $participant->setPassword($hash);
+
+                    $entityManager->flush();
+
+                    $this->addFlash("success", "Profil modifié !");
+
+                    return $this->redirectToRoute('profil');
+                } else {
+                    $this->addFlash("alert-danger", "Mot de passe pas identique !");
+                }
+            }
+
         }
+
         return $this->render('security/index.html.twig', [
             'form' => $form->createView()
         ]);
@@ -222,7 +226,7 @@ class ParticipantController extends AbstractController
                     $this->addFlash("success", " Participant inscrit !");
 
                 } else {
-                    if ($data[0] != 'pseudo' ){
+                    if ($data[0] != 'pseudo') {
                         $this->addFlash("danger", " $data[0] déja inscrit !");
                     }
                 }

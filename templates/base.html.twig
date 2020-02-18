@@ -17,8 +17,8 @@
 <header class="col-sm-12">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="{{ path('main') }}">Accueil</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -36,7 +36,8 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ path("security") }}"> Enregistrement </a>
-                            <a class="dropdown-item" href="{{ path("enregistrerFichier") }}"> Enregistrement (fichier csv) </a>
+                            <a class="dropdown-item" href="{{ path("enregistrerFichier") }}"> Enregistrement (fichier
+                                csv) </a>
                             <a class="dropdown-item" href="{{ path("liste") }}">Liste des usagers</a>
                         </div>
                     </li>
