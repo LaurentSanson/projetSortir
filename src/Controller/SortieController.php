@@ -28,6 +28,7 @@ class SortieController extends AbstractController
     public function index(EntityManagerInterface $em, Request $request)
     {
 
+
         $dateDuJour = new \DateTime('now');
 
         $repo = $em->getRepository(Sortie::class);
@@ -71,8 +72,13 @@ class SortieController extends AbstractController
         $dateDebut = $request->get('dateDebut');
         $dateFin = $request->get('dateFin');
 
+
         $sorties = $em->getRepository(Sortie::class)->search($site, $search, $dateDebut, $dateFin, $checkbox1, $checkbox2, $checkbox3, $checkbox4, $user);
         $sites = $em->getRepository(Site::class)->findAll();
+        if ($checkbox2 && $checkbox3){
+            $this->addFlash('danger', 'Vous ne pouvez pas sélectionner les sorties auxquelles vous êtes inscrit et non inscrit...');
+        }
+
 
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
@@ -107,12 +113,20 @@ class SortieController extends AbstractController
             }
             $sortie->setOrganisateur($user);
             $sortie->setSite($site);
+            $dateDuJour = new \DateTime('now');
+            if ($sortie->getDateDebut() < $dateDuJour){
+                $this->addFlash('danger', "La date de l'évènement doit être supérieure à la date du jour");
+            }
+            elseif ($sortie->getDateCloture() > $sortie->getDateDebut()){
+                $this->addFlash('danger', 'La date de clôture ne peut pas être supérieure à la date de sortie');
+            } else{
+                $em->persist($sortie);
+                $em->flush();
+                $this->addFlash("success", "Votre sortie a bien été ajoutée !");
 
-            $em->persist($sortie);
-            $em->flush();
-            $this->addFlash("success", "Votre sortie a bien été ajoutée !");
+                return $this->redirectToRoute('sortie');
+            }
 
-            return $this->redirectToRoute('sortie');
         }
         return $this->render('sortie/ajouter.html.twig', [
             'sortieForm' => $sortieForm->createView(),

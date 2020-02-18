@@ -50,9 +50,9 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('user', $user);
         }
         if ($checkbox3 == "on") {
-            $qb->innerJoin('i.participants', 'participants')
+            $qb->innerJoin('i.participants', 'parts')
                 ->andWhere(':user NOT MEMBER OF i.participants')
-                ->andWhere('participants MEMBER OF i.participants')
+                ->andWhere('parts MEMBER OF i.participants')
                 ->setParameter('user', $user);
         }
         if ($checkbox4 == 'on') {
