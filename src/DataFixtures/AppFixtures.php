@@ -5,10 +5,10 @@ namespace App\DataFixtures;
 use App\Entity\Participant;
 use App\Entity\Site;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Migrations\Version\Factory;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Faker\Factory;
 
 
 
