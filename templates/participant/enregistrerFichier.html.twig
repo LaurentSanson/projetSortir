@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+    <div>
+
+        <h3>Ajouter un participant par fichier CSV:</h3>
+
+        {{ form_start(form) }}
+        {{ form_row(form.fichierCsv) }}
+
+        <button type="submit" name="enregistrer">Enregistrer</button>
+
+        {{ form_end(form) }}
+
+    </div>
+
+{% endblock %}

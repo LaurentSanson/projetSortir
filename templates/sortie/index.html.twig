@@ -72,7 +72,10 @@
 
             {% else %}
                 <tr>
+<<<<<<< HEAD
 
+=======
+>>>>>>> c9d4478f7ae4c8cee15b0a1216ed95dc0eae1b71
                     <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>
                     <th scope="row">{{ sortie.dateDebut|date('d-m-Y') }}</th>
                     <th scope="row" class="display-tbl">{{ sortie.dateCloture|date('d-m-Y') }}</th>
@@ -96,7 +99,10 @@
                     </th>
                     {% endif %}
                     <td scope="row">
+<<<<<<< HEAD
 
+=======
+>>>>>>> c9d4478f7ae4c8cee15b0a1216ed95dc0eae1b71
                         {% if (sortie.etat.libelle != "ouverte") %}
                         {% else %}
                             {% if inscrit == 1 %}
@@ -110,7 +116,10 @@
                                 {% endif %}
                             {% endif %}
                         {% endif %}
+<<<<<<< HEAD
 
+=======
+>>>>>>> c9d4478f7ae4c8cee15b0a1216ed95dc0eae1b71
                         {% if user.id == sortie.organisateur.id and (sortie.etat == "ouverte" or sortie.etat == "Crée")  %}
                             <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
 

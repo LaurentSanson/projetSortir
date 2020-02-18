@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Entity\Site;
 use App\Essai\Util;
+use App\Form\FichierCsvType;
 use App\Form\ParticipantType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -138,7 +139,6 @@ class ParticipantController extends AbstractController
 
             }
         }
-
         return $this->render('security/index.html.twig', [
             'form' => $form->createView()
         ]);
@@ -162,50 +162,77 @@ class ParticipantController extends AbstractController
 
 
     /**
-     * @Route("/essai", name ="essai")
+     * @Route("/enregistrer/fichier", name ="enregistrerFichier")
+     * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $passwordEncoder
+     * @return RedirectResponse
      */
-    public function extraireFichierCsv(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
+    public function extraireFichierCsv(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = new Participant();
 
-        $handle = fopen("participant.csv", "r");
-        while (($data = fgetcsv($handle, 100, ',')) !== false) {
-            // pseudo,password,nom,prenom,telephone,email,site
-            if (trim($data[0]) != 'pseudo') {
-                $user->setPseudo(trim($data[0]));
-                $user->setPassword(trim($data[1]));
-                $user->setNom(trim($data[2]));
-                $user->setPrenom(trim($data[3]));
-                $user->setTelephone(trim($data[4]));
-                $user->setMail(trim($data[5]));
+        $form = $this->createForm(FichierCsvType::class);
+        $form->handleRequest($request);
 
-                dump($user);
+        if ($form->isSubmitted() && $form->isValid()) {
 
-                // recherche site en BDD
-                $repo = $entityManager->getRepository(Site::class);
-                $siteBDD = $repo->findOneBy([
-                    'nom' => $data[6]
+            $brochure = $form->get('fichierCsv')->getViewData();
+
+            $handle = fopen($brochure, "r");
+            while (($data = fgetcsv($handle, 100, ',')) !== false) {
+
+                $repo = $entityManager->getRepository(Participant::class);
+                $userBDD = $repo->findOneBy([
+                    'pseudo' => trim($data[0])
                 ]);
 
-                if ($siteBDD != null) {
-                    $user->setSite($siteBDD);
+                if (trim($data[0]) != 'pseudo' && $userBDD == null) {
+                    $user->setPseudo(trim($data[0]));
+                    $user->setPassword(trim($data[1]));
+                    $user->setNom(trim($data[2]));
+                    $user->setPrenom(trim($data[3]));
+                    $user->setTelephone(trim($data[4]));
+                    $user->setMail(trim($data[5]));
+
+                    dump($user);
+
+                    // recherche site en BDD
+                    $repo = $entityManager->getRepository(Site::class);
+                    $siteBDD = $repo->findOneBy([
+                        'nom' => $data[6]
+                    ]);
+
+                    if ($siteBDD != null) {
+                        $user->setSite($siteBDD);
+                    } else {
+                        $newSite = new Site();
+                        $newSite->setNom(trim($data[6]));
+                        $entityManager->persist($newSite);
+                        $user->setSite($newSite);
+                    }
+
+                    $hash = $passwordEncoder->encodePassword($user, $user->getPassword());
+                    $user->setPassword($hash);
+                    $user->setActif(true);
+
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+
+                    $this->addFlash("success", " Participant inscrit !");
+
                 } else {
-                    $newSite = new Site();
-                    $newSite->setNom(trim($data[6]));
-                    $user->setSite($newSite);
+                    if ($data[0] != 'pseudo' ){
+                        $this->addFlash("danger", " $data[0] déja inscrit !");
+                    }
                 }
-
-                $hash = $passwordEncoder->encodePassword($user, $user->getPassword());
-                $user->setPassword($hash);
-                $user->setActif(true);
-
-                $entityManager->persist($user);
-                $entityManager->flush();
             }
         }
-        die();
+
+        return $this->render("participant/enregistrerFichier.html.twig", [
+            'form' => $form->createView(),
+        ]);
+
 
         // code pour encoder
 //        $encoders = [new CsvEncoder(), new JsonEncoder(), new XmlEncoder()];

@@ -103,11 +103,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/forgotten_password", name="app_forgotten_password")
      */
-    public function forgottenPassword(
-        Request $request,
-        MailerInterface $mailer,
-        TokenGeneratorInterface $tokenGenerator
-    ): Response
+    public function forgottenPassword(Request $request, \Swift_Mailer $mailer, TokenGeneratorInterface $tokenGenerator) : Response
     {
 
         if ($request->isMethod('POST')) {
@@ -134,15 +130,13 @@ class SecurityController extends AbstractController
 
             $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
-            $message = (new Email())
-                ->from('laurentsanson.pro@gmail.com')
-                ->to($user->getMail())
-                ->subject('Mot de passe oublié')
-                ->text(
-                    "blablabla voici le token pour reseter votre mot de passe : " . $url,
+            $message = (new \Swift_Message('Réinitialisation de votre mot de passe'))
+                ->setFrom('laurentsanson.pro@gmail.com')
+                ->setTo($user->getMail())
+                ->setBody(
+                    "Merci de cliquer sur le lien suivant pour réinitialiser votre mot de passe : " . $url,
                     'text/html'
                 );
-
             $mailer->send($message);
 
             $this->addFlash('notice', 'Mail envoyé');
@@ -176,7 +170,7 @@ class SecurityController extends AbstractController
 
             $this->addFlash('notice', 'Mot de passe mis à jour');
 
-            return $this->redirectToRoute('main');
+            return $this->redirectToRoute('app_login');
         }else {
 
             return $this->render('security/reset_password.html.twig', ['token' => $token]);

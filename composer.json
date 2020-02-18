@@ -9,6 +9,7 @@
         "doctrine/annotations": "^1.8",
         "guzzlehttp/guzzle": "^6.5",
         "kylekatarnls/vicopo": "^1.2",
+        "mailjet/mailjet-apiv3-php": "^1.4",
         "sensio/framework-extra-bundle": "^5.5",
         "symfony/asset": "5.0.*",
         "symfony/console": "5.0.*",
@@ -24,6 +25,7 @@
         "symfony/security-bundle": "5.0.*",
         "symfony/security-csrf": "5.0.*",
         "symfony/serializer": "5.0.*",
+        "symfony/swiftmailer-bundle": "^3.4",
         "symfony/twig-pack": "^1.0",
         "symfony/validator": "5.0.*",
         "symfony/yaml": "5.0.*"
