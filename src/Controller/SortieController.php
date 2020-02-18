@@ -155,6 +155,9 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/detailSortie/{id}", name="detailSortie")
+     * @param $id
+     * @return Response
+     * @throws Exception
      */
     public function detail($id)
     {
