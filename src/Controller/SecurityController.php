@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Monolog\Handler\SwiftMailerHandler;
+use Mailjet\Resources;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -130,14 +130,19 @@ class SecurityController extends AbstractController
 
             $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
+
+
             $message = (new \Swift_Message('Réinitialisation de votre mot de passe'))
-                ->setFrom('laurentsanson.pro@gmail.com')
+                ->setFrom('contact@sortir.yj.fr')
                 ->setTo($user->getMail())
                 ->setBody(
                     "Merci de cliquer sur le lien suivant pour réinitialiser votre mot de passe : " . $url,
                     'text/html'
                 );
+
+
             $mailer->send($message);
+
 
             $this->addFlash('notice', 'Mail envoyé');
 
