@@ -5,14 +5,13 @@ namespace App\DataFixtures;
 use App\Entity\Participant;
 use App\Entity\Site;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Migrations\Version\Factory;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-
-
-class AppFixtures extends Fixture
+class AppFixtures extends Fixture implements DependentFixtureInterface
 {
 
 
@@ -43,24 +42,23 @@ class AppFixtures extends Fixture
             $participant->setNom($faker->firstName);
             $participant->setPrenom($faker->lastName);
             $participant->setActif(True);
+            $participant->setRoles(['ROLE_USER']);
             //$participant->setTelephone($faker->phoneNumber);
             $participant->setMail($faker->companyEmail);
-            $participant->setSite($this->getRandomSite());
+            $participant->setSite($this->getReference('site_'.$i));
             $manager->persist($participant);
         }
 
         $manager->flush();
     }
 
-    public function getRandomSite(EntityManagerInterface $em)
+    public function getDependencies()
     {
-        $sites = $em->getDoctrine()->getRepository(Site::class)->findAll();
-        $shuffledSites[] = shuffle($sites);
-        $siteRandom = array_rand($shuffledSites, 1);
-
-        return $siteRandom;
-
+        return array(
+            SiteFixtures::class,
+        );
     }
+
 
 
 
