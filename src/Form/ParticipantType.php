@@ -36,6 +36,7 @@ class ParticipantType extends AbstractType
 //            ->add('sortie')
             ->add('site')
             ->add('photo', FileType::class, [
+                'required' => false,
                 'mapped' => false,
                 'constraints' => [
                     new File([

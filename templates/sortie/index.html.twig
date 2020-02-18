@@ -72,6 +72,7 @@
 
             {% else %}
                 <tr>
+
                     <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>
                     <th scope="row">{{ sortie.dateDebut|date('d-m-Y') }}</th>
                     <th scope="row" class="display-tbl">{{ sortie.dateCloture|date('d-m-Y') }}</th>
@@ -108,6 +109,7 @@
                                 {% endif %}
                             {% endif %}
                         {% endif %}
+
                         {% if user.id == sortie.organisateur.id and (sortie.etat == "ouverte" or sortie.etat == "Crée")  %}
                             <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
 
