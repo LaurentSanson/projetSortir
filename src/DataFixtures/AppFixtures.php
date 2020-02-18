@@ -18,10 +18,12 @@ class AppFixtures extends Fixture
 
     //construction de l'encodeur pour le mot de passe
     private $encoder;
+    private $em;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordEncoderInterface $encoder, EntityManagerInterface $em)
     {
         $this->encoder = $encoder;
+        $this->em = $em;
     }
 
 
@@ -43,13 +45,22 @@ class AppFixtures extends Fixture
             $participant->setActif(True);
             //$participant->setTelephone($faker->phoneNumber);
             $participant->setMail($faker->companyEmail);
-            //$participant->setSite(Site::'Nantes');
+            $participant->setSite($this->getRandomSite());
             $manager->persist($participant);
         }
 
         $manager->flush();
     }
 
+    public function getRandomSite(EntityManagerInterface $em)
+    {
+        $sites = $em->getDoctrine()->getRepository(Site::class)->findAll();
+        $shuffledSites[] = shuffle($sites);
+        $siteRandom = array_rand($shuffledSites, 1);
+
+        return $siteRandom;
+
+    }
 
 
 
