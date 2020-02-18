@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use App\Form\AnnulerType;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,7 +79,7 @@ class SortieController extends AbstractController
 
             return $this->redirectToRoute('sortie');
         }
-        return $this->render('sortie/modifier.html.twig', [
+        return $this->render('sortie/ajouter.html.twig', [
             'sortieForm' => $sortieForm->createView(),
         ]);
     }
@@ -105,6 +106,9 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/detailSortie/{id}", name="detailSortie")
+     * @param $id
+     * @return Response
+     * @throws Exception
      */
     public function detail($id)
     {
