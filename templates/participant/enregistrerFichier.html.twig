@@ -7,12 +7,15 @@
 
         <h3>Ajouter un participant par fichier CSV:</h3>
 
-        {{ form_start(form) }}
-        {{ form_row(form.fichierCsv) }}
+        <div>
+            {{ form_start(form) }}
+            {{ form_row(form.fichierCsv) }}
 
-        <button type="submit" name="enregistrer">Enregistrer</button>
+            <button type="submit" name="enregistrer">Enregistrer</button>
 
-        {{ form_end(form) }}
+            {{ form_end(form) }}
+
+        </div>
 
     </div>
 

@@ -23,9 +23,45 @@ class SortieController extends AbstractController
      * @param EntityManagerInterface $em
      * @param Request $request
      * @return Response
+     * @throws Exception
      */
     public function index(EntityManagerInterface $em, Request $request)
     {
+
+
+        $dateDuJour = new \DateTime('now');
+
+        $repo = $em->getRepository(Sortie::class);
+        $sorties = $repo->findBy([
+            'etat' => [1, 2]
+        ]);
+
+        $repo = $em->getRepository(Etat::class);
+        $etatCloturee = $repo->find(3);
+        $etatEnCours = $repo->find(4);
+        $etatPassee = $repo->find(5);
+
+        foreach ($sorties as $sortie) {
+
+            $dateFin = clone $sortie->getDateDebut();
+            $dure = $sortie->getDuree();
+
+            $interval = 'PT' . $dure . 'M';
+            $dateFin = $dateFin->add(new \DateInterval($interval));
+
+            if ($sortie->getDateCloture() > $dateDuJour && $sortie->getDateDebut() < $dateDuJour) {
+                $sortie->setEtat($etatCloturee);
+                $em->flush();
+            } elseif ($dateDuJour > $sortie->getDateDebut() && $dateDuJour < $dateFin) {
+                $sortie->setEtat($etatEnCours);
+                $em->flush();
+            } elseif ($dateDuJour > $dateFin) {
+                $sortie->setEtat($etatPassee);
+                $em->flush();
+            }
+        }
+
+
         $user = $this->getUser();
         $site = $request->get('site');
         $search = $request->get('search');
