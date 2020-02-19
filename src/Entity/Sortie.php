@@ -82,6 +82,11 @@ class Sortie
      */
     private $motif;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Groupe", inversedBy="sortie")
+     */
+    private $groupe;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -253,6 +258,18 @@ class Sortie
     public function setMotif(?string $motif): self
     {
         $this->motif = $motif;
+
+        return $this;
+    }
+
+    public function getGroupe(): ?Groupe
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?Groupe $groupe): self
+    {
+        $this->groupe = $groupe;
 
         return $this;
     }
