@@ -92,7 +92,7 @@ class Sortie
         $this->participants = new ArrayCollection();
     }
 
-    public function  __toString()
+    public function __toString()
     {
         return $this->nom;
     }
@@ -272,5 +272,20 @@ class Sortie
         $this->groupe = $groupe;
 
         return $this;
+    }
+
+    /**
+     * @param Participant $participant
+     * @return bool
+     */
+    public function affichageSortiePriviee(Participant $participant): ?bool
+    {
+        if ($this->getGroupe() == null) {
+            return true;
+        } elseif (in_array($participant, $this->getGroupe()->getParticipants()->getValues())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
