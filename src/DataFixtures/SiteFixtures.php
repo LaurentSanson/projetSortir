@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Participant;
 use App\Entity\Site;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;

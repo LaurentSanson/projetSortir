@@ -126,6 +126,9 @@
     "mailjet/mailjet-apiv3-php": {
         "version": "v1.4.1"
     },
+    "mailjet/mailjet-swiftmailer": {
+        "version": "2.0.0"
+    },
     "monolog/monolog": {
         "version": "2.0.2"
     },

@@ -1,2 +1,5 @@
 swiftmailer:
     disable_delivery: false
+    url: '%env(MAILER_URL)%'
+    transport: mailjet
+

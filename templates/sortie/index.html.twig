@@ -6,7 +6,7 @@
 
     <h1>Gérer les sorties</h1>
     <div class="button-group">
-        <button type="button" class="btn btn-outline-secondary"><a href="{{ path('nouvelleSortie') }}">Ajouter une
+        <button type="button" class="btn btn-outline-secondary"><a href="{{ path('nouvelleSortie') }}" style="color: black">Ajouter une
                 sortie</a>
         </button>
         <p>Filtrer les sorties</p>
@@ -73,7 +73,7 @@
             {% else %}
                 <tr>
 
-                    <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}">{{ sortie.nom }}</a></th>
+                    <th scope="row"><a href="{{ path('detailSortie', {id:sortie.id}) }}" style="color: darkcyan">{{ sortie.nom }}</a></th>
                     <th scope="row">{{ sortie.dateDebut|date('d-m-Y') }}</th>
                     <th scope="row" class="display-tbl">{{ sortie.dateCloture|date('d-m-Y') }}</th>
                     <th scope="row" class="display-tbl">{{ sortie.participants.count }}
@@ -92,38 +92,38 @@
                         {% if app.user == sortie.organisateur %}
                         {{ sortie.organisateur }}
                         {% else %}
-                        <a href="{{ path('profil', {id:sortie.organisateur.id}) }}">{{ sortie.organisateur }}</a>
+                        <a href="{{ path('profil', {id:sortie.organisateur.id}) }}" style="color: darkcyan">{{ sortie.organisateur }}</a>
                     </th>
                     {% endif %}
                     <td scope="row">
                         {% if (sortie.etat.libelle != "ouverte") %}
                         {% else %}
                             {% if inscrit == 1 %}
-                                <a href="#"
-                                   onclick=" $.ajax('{{ path('desinscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">se
+                                <a href="#" style="color: darkcyan"
+                                   onclick=" $.ajax('{{ path('desinscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Se
                                     desinscrire</a>
                             {% else %}
                                 {% if sortie.participants.count < sortie.nbInscriptionsMax %}
-                                    <a href="#"
-                                       onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">s'inscrire</a>
+                                    <a href="#" style="color: darkcyan"
+                                       onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">S'inscrire</a>
                                 {% endif %}
                             {% endif %}
                         {% endif %}
 
                         {% if user.id == sortie.organisateur.id and (sortie.etat == "ouverte" or sortie.etat == "Crée")  %}
-                            <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
+                            <a href="{{ path('modification', {'id':sortie.id}) }}" style="color: darkcyan">Modifier</a>
 
                         {% endif %}
                         {% if is_granted('ROLE_ADMIN') and (sortie.etat == "ouverte" or sortie.etat == "Crée")  %}
-                            <a href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
+                            <a href="{{ path('modification', {'id':sortie.id}) }}" style="color: darkcyan">Modifier</a>
 
                         {% endif %}
                         {% if (user.id == sortie.organisateur.id and sortie.etat == "Crée" ) %}
-                            <a href="{{ path('publier', {'id':sortie.id}) }}">Publier</a>
+                            <a href="{{ path('publier', {'id':sortie.id}) }}" style="color: darkcyan">Publier</a>
 
                         {% endif %}
                         {% if (is_granted('ROLE_ADMIN') and sortie.etat == "Crée" ) %}
-                            <a href="{{ path('publier', {'id':sortie.id}) }}">Publier</a>
+                            <a href="{{ path('publier', {'id':sortie.id}) }}" style="color: darkcyan">Publier</a>
 
                         {% endif %}
 

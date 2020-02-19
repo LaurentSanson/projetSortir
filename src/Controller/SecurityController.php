@@ -9,9 +9,6 @@ use Mailjet\Resources;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -103,7 +100,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/forgotten_password", name="app_forgotten_password")
      */
-    public function forgottenPassword(Request $request, \Swift_Mailer $mailer, TokenGeneratorInterface $tokenGenerator) : Response
+    public function forgottenPassword(Request $request, TokenGeneratorInterface $tokenGenerator): Response
     {
 
         if ($request->isMethod('POST')) {
@@ -120,7 +117,7 @@ class SecurityController extends AbstractController
             }
             $token = $tokenGenerator->generateToken();
 
-            try{
+            try {
                 $user->setResetToken($token);
                 $entityManager->flush();
             } catch (\Exception $e) {
@@ -130,18 +127,49 @@ class SecurityController extends AbstractController
 
             $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
+            $apikey = '8c03245d267c35ccec9553f2d8493fdd';
+            $apisecret = '5e3155380d4127de9cf7c9a34af71e1d';
 
+            $mj = new \Mailjet\Client($apikey, $apisecret, true, ['version' => 'v3.1', 'timeout'=>20]);
 
-            $message = (new \Swift_Message('Réinitialisation de votre mot de passe'))
-                ->setFrom('contact@sortir.yj.fr')
-                ->setTo($user->getMail())
-                ->setBody(
-                    "Merci de cliquer sur le lien suivant pour réinitialiser votre mot de passe : " . $url,
-                    'text/html'
-                );
+            $body = [
+                'Messages' => [
+                    [
+                        'From' => [
+                            'Email' => "contact@sortir.yj.fr",
+                            'Name' => "Me"
+                        ],
+                        'To' => [
+                            [
+                                'Email' => $user->getMail(),
+                                'Name' => "You"
+                            ]
+                        ],
+                        'Subject' => "Réinitialisation de votre mot de passe",
+                        'TextPart' => "Merci de cliquer sur le lien suivant pour réinitialiser votre mot de passe : " . $url,
+                    ]
+                ]
+            ];
 
+            $response = $mj->get(Resources::$Email);
+            if ($response->success())
+                var_dump($response->getData());
+            else
+                var_dump($response->getStatus());
 
-            $mailer->send($message);
+            $response = $mj->post(Resources::$Email, ['body'=>$body]);
+            $response->success() && var_dump($response->getData());
+
+//            $message = (new \Swift_Message('Réinitialisation de votre mot de passe'))
+//                ->setFrom('contact@sortir.yj.fr')
+//                ->setTo($user->getMail())
+//                ->setBody(
+//                    "Merci de cliquer sur le lien suivant pour réinitialiser votre mot de passe : " . $url,
+//                    'text/html'
+//                );
+//
+//
+//            $mailer->send($message);
 
 
             $this->addFlash('notice', 'Mail envoyé');
@@ -176,7 +204,7 @@ class SecurityController extends AbstractController
             $this->addFlash('notice', 'Mot de passe mis à jour');
 
             return $this->redirectToRoute('app_login');
-        }else {
+        } else {
 
             return $this->render('security/reset_password.html.twig', ['token' => $token]);
         }
