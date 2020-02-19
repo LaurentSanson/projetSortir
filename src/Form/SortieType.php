@@ -21,6 +21,7 @@ class SortieType extends AbstractType
                 'widget' => 'single_text'])
             ->add('nbInscriptionsMax')
             ->add('descriptionInfos')
+            ->add('groupe')
             ->add('lieu')
             ->add('groupe',null, ['required'=> true])
         ;

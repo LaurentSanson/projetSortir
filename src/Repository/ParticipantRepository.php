@@ -23,6 +23,15 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
         parent::__construct($registry, Participant::class);
     }
 
+    public function search($search)
+    {
+        $qb = $this->createQueryBuilder('i');
+        $qb->andWhere('i.nom LIKE :search')
+            ->setParameter('search', "%" . $search . "%");
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */

@@ -1,20 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello GroupeController!{% endblock %}
+{% block title %}Management des groupes{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Gérer les groupes</h1>
+    <div class="button-group">
+        <button type="button" class="btn btn-outline-secondary"><a href="{{ path('nouveauGroupe') }}">Ajouter un groupe</a>
+        </button>
+        <p>Filtrer les groupes</p>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Projet/projetSortir/src/Controller/GroupeController.php'|file_link(0) }}">src/Controller/GroupeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Projet/projetSortir/templates/groupe/index.html.twig'|file_link(0) }}">templates/groupe/index.html.twig</a></code></li>
-    </ul>
-</div>
+        {% for groupe in groupes %}
+            <tr>
+                <td><a href="{{ path('detailGroupe', {id:groupe.id}) }}">{{ groupe.nom }}</a></td>
+                <td>
+                    <button class="delete btn btn-outline-dark" value="{{ groupe.id }}" type="submit">Supprimer</button>
+                    <button value="{{ groupe.id }}" class="btn btn-outline-dark"><a href="{{path('ajouterParticipant', {'id':groupe.id})}}">Ajouter des participants</a></button>
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script type="text/javascript">
+        $(".delete").click(function () {
+            if (confirm("Etes vous sur de vouloir supprimer ce lieu ?")) {
+                $.ajax({
+                    url: "/deleteZone/" + $(this).val(),
+                })
+                    .done(function () {
+                        alert("Votre zone a bien été effacée !");
+                        location.reload()
+                    })
+            }
+        });
+    </script>
+
 {% endblock %}

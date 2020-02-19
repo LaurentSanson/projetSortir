@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme groupeForm 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block title %}Ajouter un groupe{% endblock %}
+
+{% block body %}
+
+    <h3>Ajouter un groupe</h3>
+    <div>
+        {{ form_start(groupeForm) }}
+        {{ form_widget(groupeForm) }}
+        <button type="submit">Valider</button>
+        {{ form_end(groupeForm) }}
+    </div>
+
+{% endblock %}
