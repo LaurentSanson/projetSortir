@@ -4,6 +4,35 @@
     <h1>Details</h1>
     <div class="card text-center">
        Nom : {{ groupe.nom }}
-        <button type="submit"><a href="{{ path('ajouterParticipant') }}">Ajouter des participants</a></button>
+        <button type="submit"><a href="{{ path('ajouterParticipant', {'id':groupe.id}) }}">Ajouter des participants</a></button>
+    </div>
+
+    <div class="after-detail">
+        <h3>
+            Liste des participants inscrit :
+        </h3>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for participant in groupe.participants %}
+                <tr>
+                    <th scope="row">
+                        {% if app.user == participant %}
+                            {{ participant.pseudo }}
+                        {% else %}
+                            <a href="{{ path('profil', {'id':participant.id}) }}">{{ participant.pseudo }}</a>
+                        {% endif %}
+                    </th>
+                    <th scope="row">{{ participant.mail }}</th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
     </div>
 {% endblock %}

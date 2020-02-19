@@ -5,66 +5,43 @@
 {% block body %}
 
     <h3>Ajouter des participants</h3>
-    <form method="GET" action="{{ path('chercheParticipant') }}">
+    <form method="GET" action="{{ path('chercheParticipant', {id: groupe.id}) }}">
         <div>
             <label for="exampleFormControlSelect1">Cherchez votre participant :</label>
             <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" value=""
                    aria-label="Search">
         </div>
         <div>
-            <button type="submit">Rechercher</button>
+            <button type="submit" class="btn btn-outline-dark">Rechercher</button>
         </div>
     </form>
+    <div>
+        <button class="btn btn-outline-dark"><a href="{{ path('detailGroupe', {'id': groupe.id}) }}">Retour au groupe</a></button>
+    </div>
 
     <table class="table table-hover">
         <thead>
         <tr>
-            <th scope="col">Nom</th>
+            <th scope="col">Pseudo</th>
             <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
-
         {% for participant in participants %}
-            <tr>
-                <td>{{ participant.nom }}</td>
-                <td>
-                    <button class="delete" value="{{ participant.id }}" type="submit" class="btn btn-outline-dark">Supprimer</button>
-                </td>
+        <tr>
+            <td>{{ participant.pseudo }}</td>
+            <td>
+                <button type="submit" class="btn btn-outline-dark">
+                    <a href="#" style="color: darkcyan"
+                       onclick=" $.ajax('{{ path('inscriptionGroupe', {idUser: participant.id, idGroupe: groupe.id}) }}').done(function(){location.reload()}); ">Ajouter
+                        au groupe</a>
+                </button>
+            </td>
 
-            </tr>
+        </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <div class="after-detail">
-        <h3>
-            Liste des participants inscrit :
-        </h3>
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">Pseudo</th>
-                <th scope="col">Nom</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for participant in groupe.participants %}
-                <tr>
-                    <th scope="row">
-                        {% if app.user == participant %}
-                            {{ participant.pseudo }}
-                        {% else %}
-                            <a href="{{ path('profil', {'id':participant.id}) }}">{{ participant.pseudo }}</a>
-                        {% endif %}
-                    </th>
-                    <th scope="row">{{ participant.nom }}</th>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-
-    </div>
 
 {% endblock %}
 

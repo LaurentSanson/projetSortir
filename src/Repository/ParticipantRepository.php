@@ -26,7 +26,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     public function search($search)
     {
         $qb = $this->createQueryBuilder('i');
-        $qb->andWhere('i.nom LIKE :search')
+        $qb->andWhere('i.pseudo LIKE :search')
             ->setParameter('search', "%" . $search . "%");
         $query = $qb->getQuery();
         return $query->getResult();
