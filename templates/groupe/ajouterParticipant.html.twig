@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter des participants{% endblock %}
+
+{% block body %}
+
+    <h3>Ajouter des participants</h3>
+    <form method="GET" action="{{ path('chercheParticipant') }}">
+        <div>
+            <label for="exampleFormControlSelect1">Cherchez votre participant :</label>
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" name="search" value=""
+                   aria-label="Search">
+        </div>
+        <div>
+            <button type="submit">Rechercher</button>
+        </div>
+    </form>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for participant in participants %}
+            <tr>
+                <td>{{ participant.nom }}</td>
+                <td>
+                    <button class="delete" value="{{ participant.id }}" type="submit" class="btn btn-outline-dark">Supprimer</button>
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="after-detail">
+        <h3>
+            Liste des participants inscrit :
+        </h3>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Pseudo</th>
+                <th scope="col">Nom</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for participant in groupe.participants %}
+                <tr>
+                    <th scope="row">
+                        {% if app.user == participant %}
+                            {{ participant.pseudo }}
+                        {% else %}
+                            <a href="{{ path('profil', {'id':participant.id}) }}">{{ participant.pseudo }}</a>
+                        {% endif %}
+                    </th>
+                    <th scope="row">{{ participant.nom }}</th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script type="text/javascript">
+        $(".delete").click(function () {
+            if (confirm("Etes vous sur de vouloir supprimer ce groupe ?")) {
+                $.ajax({
+                    url: "/deleteZone/" + $(this).val(),
+                })
+                    .done(function () {
+                        alert("Votre zone a bien été effacée !");
+                        location.reload()
+                    })
+            }
+        });
+    </script>
+
+{% endblock %}

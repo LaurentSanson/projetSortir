@@ -34,7 +34,7 @@ class Groupe
     private $nom;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\sortie", mappedBy="groupe")
+     * @ORM\OneToMany(targetEntity="App\Entity\Sortie", mappedBy="groupe")
      */
     private $sortie;
 
@@ -42,6 +42,11 @@ class Groupe
     {
         $this->participants = new ArrayCollection();
         $this->sortie = new ArrayCollection();
+    }
+
+    public function  __toString()
+    {
+        return $this->nom;
     }
 
     public function getId(): ?int
