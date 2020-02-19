@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Groupe;
 use App\Entity\Participant;
 use App\Form\GroupeType;
@@ -9,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GroupeController extends AbstractController
@@ -28,6 +30,9 @@ class GroupeController extends AbstractController
 
     /**
      * @Route("/nouveauGroupe", name="nouveauGroupe")
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return RedirectResponse|Response
      */
     public function nouveauGroupe(EntityManagerInterface $em, Request $request)
     {
@@ -88,7 +93,8 @@ class GroupeController extends AbstractController
      * @Route("/ajouterParticipant/{id}", name="ajouterParticipant")
      * @Route("/chercheParticipant/{id}", name="chercheParticipant", methods={"GET"})
      * @param $id
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+
      */
     public function ajouterParticipant(EntityManagerInterface $em, Request $request, $id=0)
     {

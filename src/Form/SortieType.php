@@ -23,6 +23,7 @@ class SortieType extends AbstractType
             ->add('descriptionInfos')
             ->add('groupe')
             ->add('lieu')
+            ->add('groupe',null, ['required'=> true])
         ;
     }
 
