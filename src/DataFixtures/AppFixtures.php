@@ -5,23 +5,24 @@ namespace App\DataFixtures;
 use App\Entity\Participant;
 use App\Entity\Site;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Migrations\Version\Factory;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-
-
-class AppFixtures extends Fixture
+class AppFixtures extends Fixture implements DependentFixtureInterface
 {
 
 
     //construction de l'encodeur pour le mot de passe
     private $encoder;
+    private $em;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordEncoderInterface $encoder, EntityManagerInterface $em)
     {
         $this->encoder = $encoder;
+        $this->em = $em;
     }
 
 
@@ -41,13 +42,21 @@ class AppFixtures extends Fixture
             $participant->setNom($faker->firstName);
             $participant->setPrenom($faker->lastName);
             $participant->setActif(True);
+            $participant->setRoles(['ROLE_USER']);
             //$participant->setTelephone($faker->phoneNumber);
             $participant->setMail($faker->companyEmail);
-            //$participant->setSite(Site::'Nantes');
+            $participant->setSite($this->getReference('site_'.$i));
             $manager->persist($participant);
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return array(
+            SiteFixtures::class,
+        );
     }
 
 
