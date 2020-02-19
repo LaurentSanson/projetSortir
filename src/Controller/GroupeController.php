@@ -7,6 +7,7 @@ use App\Entity\Participant;
 use App\Form\GroupeType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -33,11 +34,11 @@ class GroupeController extends AbstractController
         $groupe = new Groupe();
         $groupeForm = $this->createForm(GroupeType::class, $groupe);
         $groupeForm->handleRequest($request);
-        if ($groupeForm->isSubmitted() && $groupeForm->isValid()){
+        if ($groupeForm->isSubmitted() && $groupeForm->isValid()) {
             $em->persist($groupe);
             $em->flush();
             $this->addFlash("success", "Votre groupe a bien été ajouté !");
-            return $this->redirectToRoute('detailGroupe', array('id'=>$groupe->getId()));
+            return $this->redirectToRoute('detailGroupe', array('id' => $groupe->getId()));
         }
         return $this->render('groupe/ajouter.html.twig', [
             'groupeForm' => $groupeForm->createView()
@@ -85,21 +86,39 @@ class GroupeController extends AbstractController
 
     /**
      * @Route("/ajouterParticipant/{id}", name="ajouterParticipant")
-     * @Route("/chercheParticipant", name="chercheParticipant")
+     * @Route("/chercheParticipant/{id}", name="chercheParticipant", methods={"GET"})
      * @param $id
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function ajouterParticipant(EntityManagerInterface $em,  Request $request, $id){
+    public function ajouterParticipant(EntityManagerInterface $em, Request $request, $id=0)
+    {
         $groupeRepository = $em->getRepository(Groupe::class);
         $groupe = $groupeRepository->find($id);
-        foreach ($groupe->getParticipants() as $participant){
-            $participant->getId();
-        }
         $search = $request->get('search');
         $participantRepository = $em->getRepository(Participant::class);
         $participants = $participantRepository->search($search);
+
         return $this->render('groupe/ajouterParticipant.html.twig', [
-            'participants' => $participants,
-            'groupe' => $groupe
+            'groupe' => $groupe,
+            'participants' => $participants
         ]);
+    }
+
+    /**
+     * @Route("/inscriptionGroupe/{idGroupe}/{idUser}", name="inscriptionGroupe")
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
+     */
+    public function inscriptionGroupe($idGroupe, $idUser, EntityManagerInterface $entityManager)
+    {
+        $repo = $entityManager->getRepository(Groupe::class);
+        $groupe = $repo->find($idGroupe);
+        $user = $entityManager->getRepository(Participant::class)->find($idUser);
+        $user->addGroupe($groupe);
+        $entityManager->flush();
+        $this->addFlash("success", "inscription OK");
+
+        return $this->redirectToRoute('detailGroupe', ['id' => $idGroupe]);
+
     }
 }
