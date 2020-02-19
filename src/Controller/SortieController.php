@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Etat;
+use App\Entity\Groupe;
 use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Form\AnnulerType;
@@ -92,9 +93,11 @@ class SortieController extends AbstractController
      * @param EntityManagerInterface $em
      * @param Request $request
      * @return RedirectResponse|Response
+     * @throws Exception
      */
     public function nouvelleSortie(EntityManagerInterface $em, Request $request)
     {
+
         $sortie = new Sortie();
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
@@ -103,12 +106,17 @@ class SortieController extends AbstractController
 
             $user = $this->getUser();
             $site = $this->getUser()->getSite();
+
+
+            if ($_POST['sortieCheck'] == 'off') {
+                $sortie->setGroupe(null);
+            }
+
             if (isset($_POST['enregistrer'])) {
                 $etat = $em->getRepository(Etat::class)->find(1);
                 $sortie->setEtat($etat);
             } elseif (isset($_POST['publier'])) {
                 $etat = $em->getRepository(Etat::class)->find(2);
-
                 $sortie->setEtat($etat);
             }
             $sortie->setOrganisateur($user);

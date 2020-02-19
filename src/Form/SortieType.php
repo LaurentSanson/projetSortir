@@ -22,6 +22,7 @@ class SortieType extends AbstractType
             ->add('nbInscriptionsMax')
             ->add('descriptionInfos')
             ->add('lieu')
+            ->add('groupe',null, ['required'=> true])
         ;
     }
 
