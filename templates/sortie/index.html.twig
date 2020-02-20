@@ -6,7 +6,7 @@
 
     <h1>Gérer les sorties</h1>
     <div class="button-group">
-   <a class="btn btn-secondary" href="{{ path('nouvelleSortie') }}">Ajouter une sortie</a>
+        <a class="btn btn-secondary" href="{{ path('nouvelleSortie') }}">Ajouter une sortie</a>
 
         <p>Filtrer les sorties</p>
     </div>
@@ -108,7 +108,7 @@
                                         desinscrire</a>
                                 {% else %}
                                     {% if sortie.participants.count < sortie.nbInscriptionsMax %}
-                                        <a  class="btn btn-secondary btn-sm" href="#"
+                                        <a class="btn btn-secondary btn-sm" href="#"
                                            onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">S'inscrire</a>
                                     {% endif %}
                                 {% endif %}
@@ -116,21 +116,19 @@
 
                             {% if user.id == sortie.organisateur.id and (sortie.etat == "ouverte" or sortie.etat == "Crée") %}
                                 <a class="btn btn-secondary btn-sm" href="{{ path('modification', {'id':sortie.id}) }}"
-                                   >Modifier</a>
+                                >Modifier</a>
 
                             {% endif %}
                             {% if is_granted('ROLE_ADMIN') and (sortie.etat == "ouverte" or sortie.etat == "Crée") %}
-                                <a href="{{ path('modification', {'id':sortie.id}) }}"
-                                   style="color: darkcyan">Modifier</a>
-
+                                <a class="btn btn-secondary btn-sm" href="{{ path('modification', {'id':sortie.id}) }}">Modifier</a>
                             {% endif %}
+
                             {% if (user.id == sortie.organisateur.id and sortie.etat == "Crée" ) %}
-                                <a href="{{ path('publier', {'id':sortie.id}) }}" style="color: darkcyan">Publier</a>
-
+                                <a class="btn btn-secondary btn-sm" href="{{ path('publier', {'id':sortie.id}) }}">Publier</a>
                             {% endif %}
-                            {% if (is_granted('ROLE_ADMIN') and sortie.etat == "Crée" ) %}
-                                <a href="{{ path('publier', {'id':sortie.id}) }}" style="color: darkcyan">Publier</a>
 
+                            {% if (is_granted('ROLE_ADMIN') and sortie.etat == "Crée" ) %}
+                                <a class="btn btn-secondary btn-sm" href="{{ path('publier', {'id':sortie.id}) }}">Publier</a>
                             {% endif %}
 
 

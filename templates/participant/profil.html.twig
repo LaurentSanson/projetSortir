@@ -3,25 +3,39 @@
 
 {% block body %}
     <div class="container">
-    <div>
-        <h1> {{ participant.pseudo }}</h1>
-        <img src="{{ asset('uploads/photos/'~participant.photo) }}" alt="photo de profil">
-        <h3>Prénom : {{ participant.prenom }}</h3>
-        <h3>Nom : {{ participant.nom }}</h3>
-        <h3>Téléphone : {{ participant.telephone }}</h3>
-        <h3>Email : {{ participant.mail }}</h3>
-        <h3>Site de rattachement : {{ participant.site }}</h3>
+        <div class="row">
+            <h1> {{ participant.pseudo }}</h1>
+        </div>
 
-        {% if app.user == participant %}
-            <a href="{{ path("modifierProfil") }}">
-                <button type="button" class="btn btn-outline-secondary">modifier</button>
-            </a>
-        {% endif %}
+        <div class="row">
+            <div class="col-lg-3">
 
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path("supprimer", {id: participant.id}) }}">
-                <button type="button" class="btn btn-outline-secondary">Supprimer</button>
-            </a>
-        {% endif %}
+            </div>
+            <div class="col-3">
+                <img style="height: 200px; width: auto; " src="{{ asset('uploads/photos/'~participant.photo) }}" alt="photo de profil">
+            </div>
+
+            <div class="col-6">
+                <h3>Prénom : {{ participant.prenom }}</h3>
+                <h3>Nom : {{ participant.nom }}</h3>
+                <h3>Téléphone : {{ participant.telephone }}</h3>
+                <h3>Email : {{ participant.mail }}</h3>
+                <h3>Site de rattachement : {{ participant.site }}</h3>
+            </div>
+        </div>
+        <div>
+            <br>
+        </div>
+
+        <div class="row justify-content-center">
+
+            {% if app.user == participant %}
+                <a class="btn btn-secondary" href="{{ path("modifierProfil") }}"> modifier </a>
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
+                <a class="btn btn-secondary" href="{{ path("supprimer", {id: participant.id}) }}">Supprimer</a>
+            {% endif %}
+        </div>
+
     </div>
 {% endblock %}

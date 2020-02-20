@@ -2,9 +2,9 @@
 
 {% block body %}
     <h1>Details</h1>
-    <div class="card text-center">
+    <div class="card text-center ">
        Nom : {{ groupe.nom }}
-        <button type="submit"><a href="{{ path('ajouterParticipant', {'id':groupe.id}) }}">Ajouter des participants</a></button>
+        <a class="btn btn-secondary" href="{{ path('ajouterParticipant', {'id':groupe.id}) }}">Ajouter des participants</a>
     </div>
 
     <div class="after-detail">

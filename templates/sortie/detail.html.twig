@@ -22,10 +22,13 @@
             <p>Longitude : {{ sortie.lieu.longitute }}</p>
         </div>
     </div>
+    <div>
+        <br>
+    </div>
     {% if ( miseEnForme == 0) %}
-        <div class="after-detail row">
+        <div class="after-detail row justify-content-center">
             <a href="{{ path('inscription', {id : sortie.id}) }}">
-                <button type="button" class="btn btn-outline-success btn-sm">S'inscrire</button>
+                <button type="button" class="btn btn-secondary">S'inscrire</button>
             </a>
         </div>
     {% endif %}
@@ -35,13 +38,15 @@
         </div>
     {% endif %}
     {% if ( miseEnForme == 2) %}
-        <div class="after-detail">
+        <div class="after-detail row justify-content-center">
             <a href="{{ path('desinscription', {id : sortie.id}) }}">
-                <button type="button" class="btn btn-outline-success btn-sm">se désinscrire</button>
+                <button type="button" class="btn btn-secondary">se désinscrire</button>
             </a>
         </div>
     {% endif %}
-
+    <di>
+        <br>
+    </di>
 
     <div class="after-detail">
         <h3>
