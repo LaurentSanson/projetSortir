@@ -62,7 +62,6 @@ class SortieController extends AbstractController
             }
         }
 
-
         $user = $this->getUser();
         $site = $request->get('site');
         $search = $request->get('search');
@@ -75,7 +74,7 @@ class SortieController extends AbstractController
 
         $sorties = $em->getRepository(Sortie::class)->search($site, $search, $dateDebut, $dateFin, $checkbox1, $checkbox2, $checkbox3, $checkbox4, $user);
         $sites = $em->getRepository(Site::class)->findAll();
-        if ($checkbox2 && $checkbox3){
+        if ($checkbox2 && $checkbox3) {
             $this->addFlash('danger', 'Vous ne pouvez pas sélectionner les sorties auxquelles vous êtes inscrit et non inscrit...');
         }
 
@@ -95,7 +94,8 @@ class SortieController extends AbstractController
      * @throws Exception
      */
     public function nouvelleSortie(EntityManagerInterface $em, Request $request)
-    {  $createur = $this->getUser();
+    {
+        $createur = $this->getUser();
         $sortie = new Sortie();
         $sortieForm = $this->createForm(SortieType::class, $sortie, array('user' => $createur));
         $sortieForm->handleRequest($request);
@@ -103,13 +103,15 @@ class SortieController extends AbstractController
         $groupeRepository = $em->getRepository(Groupe::class);
         $groupes = $groupeRepository->findBy(['Createur' => $createur]);
 
+
+
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
             $user = $this->getUser();
             $site = $this->getUser()->getSite();
 
 
-            if ($_POST['sortieCheck'] == 'off') {
+            if ( !in_array('sortieCheck', $_POST)){
                 $sortie->setGroupe(null);
             }
 
@@ -123,12 +125,11 @@ class SortieController extends AbstractController
             $sortie->setOrganisateur($user);
             $sortie->setSite($site);
             $dateDuJour = new \DateTime('now');
-            if ($sortie->getDateDebut() < $dateDuJour){
+            if ($sortie->getDateDebut() < $dateDuJour) {
                 $this->addFlash('danger', "La date de l'évènement doit être supérieure à la date du jour");
-            }
-            elseif ($sortie->getDateCloture() > $sortie->getDateDebut()){
+            } elseif ($sortie->getDateCloture() > $sortie->getDateDebut()) {
                 $this->addFlash('danger', 'La date de clôture ne peut pas être supérieure à la date de sortie');
-            } else{
+            } else {
                 $em->persist($sortie);
                 $em->flush();
                 $this->addFlash("success", "Votre sortie a bien été ajoutée !");
@@ -146,6 +147,9 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/publier/{id}", name="publier")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
      */
     public function publierSortie($id, EntityManagerInterface $em)
     {
@@ -292,13 +296,17 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/modification/{id}", name="modification")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return RedirectResponse|Response
      */
     public function modifierSortie($id, EntityManagerInterface $em, Request $request)
     {
         $repo = $em->getRepository(Sortie::class);
         $sortie = $repo->find($id);
 
-        $form = $this->createForm(SortieType::class, $sortie);
+        $form = $this->createForm(SortieType::class, $sortie, array('user' => $this->getUser()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

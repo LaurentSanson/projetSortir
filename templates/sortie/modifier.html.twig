@@ -16,13 +16,13 @@
             {{ form_row(sortieForm.nbInscriptionsMax) }}
             {{ form_row(sortieForm.descriptionInfos) }}
             {{ form_row(sortieForm.lieu) }}
-        <button type="submit">Modifier</button>
+        <button class="btn btn-secondary" type="submit">Modifier</button>
         {{ form_end(sortieForm) }}
     </div>
     <br>
     <div class="annuler">
         <a href="{{ path('annulation', {id : sortie.id}) }}">
-            <button type="button" class="btn btn-outline-success btn-sm">Annuler la sortie</button>
+            <button type="button" class="btn btn-secondary">Annuler la sortie</button>
         </a>
     </div>
 

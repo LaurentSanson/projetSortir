@@ -34,14 +34,19 @@
                 </label>
             </div>
 
+            <div class="text-center">
+                <button class="btn btn-secondary btn-lg" type="submit">
+                    Se connecter
+                </button>
+            </div>
 
-            <button class="btn btn-lg btn-primary" type="submit">
-                Se connecter
-            </button>
         </form>
-        <button class="btn btn-lg btn-primary"><a href="{{ path('app_forgotten_password') }}" style="color: white">
-            Mot de passe oublié
-            </a></button>
+        <br>
+        <div class="text-center">
+            <a class="btn btn-secondary btn-sm" href="{{ path('app_forgotten_password') }}" style="color: white">
+                Mot de passe oublié
+            </a>
+        </div>
     </div>
 
 {% endblock %}
