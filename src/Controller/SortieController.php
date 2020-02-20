@@ -73,7 +73,6 @@ class SortieController extends AbstractController
         $dateDebut = $request->get('dateDebut');
         $dateFin = $request->get('dateFin');
 
-
         $sorties = $em->getRepository(Sortie::class)->search($site, $search, $dateDebut, $dateFin, $checkbox1, $checkbox2, $checkbox3, $checkbox4, $user);
         $sites = $em->getRepository(Site::class)->findAll();
         if ($checkbox2 && $checkbox3){
@@ -84,7 +83,7 @@ class SortieController extends AbstractController
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
             'sites' => $sites,
-            'user' => $user,
+            'user' => $user
         ]);
     }
 
@@ -96,11 +95,13 @@ class SortieController extends AbstractController
      * @throws Exception
      */
     public function nouvelleSortie(EntityManagerInterface $em, Request $request)
-    {
-
+    {  $createur = $this->getUser();
         $sortie = new Sortie();
-        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm = $this->createForm(SortieType::class, $sortie, array('user' => $createur));
         $sortieForm->handleRequest($request);
+
+        $groupeRepository = $em->getRepository(Groupe::class);
+        $groupes = $groupeRepository->findBy(['Createur' => $createur]);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
@@ -138,6 +139,7 @@ class SortieController extends AbstractController
         }
         return $this->render('sortie/ajouter.html.twig', [
             'sortieForm' => $sortieForm->createView(),
+            'groupes' => $groupes
         ]);
     }
 

@@ -44,7 +44,7 @@ class Groupe
         $this->sortie = new ArrayCollection();
     }
 
-    public function  __toString()
+    public function __toString()
     {
         return $this->nom;
     }
@@ -134,5 +134,10 @@ class Groupe
 
         return $this;
     }
-    
+
+//    public function userGroupes(Participant $participant)
+//    {
+//        return $participant->getCreateurGroupes();
+//    }
+
 }
