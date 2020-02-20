@@ -105,6 +105,7 @@ class SortieController extends AbstractController
             $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
             return $this->redirectToRoute('main');
         }
+
         $createur = $this->getUser();
         $sortie = new Sortie();
         $sortieForm = $this->createForm(SortieType::class, $sortie, array('user' => $createur));
@@ -113,14 +114,13 @@ class SortieController extends AbstractController
         $groupeRepository = $em->getRepository(Groupe::class);
         $groupes = $groupeRepository->findBy(['Createur' => $createur]);
 
-
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
             $user = $this->getUser();
             $site = $this->getUser()->getSite();
 
 
-            if ($_POST['sortieCheck'] == 'off') {
+            if ( !in_array('sortieCheck', $_POST)){
                 $sortie->setGroupe(null);
             }
 
@@ -158,6 +158,9 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/publier/{id}", name="publier")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @return RedirectResponse
      */
     public function publierSortie($id, EntityManagerInterface $em)
     {
@@ -323,6 +326,10 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/modification/{id}", name="modification")
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return RedirectResponse|Response
      */
     public function modifierSortie($id, EntityManagerInterface $em, Request $request)
     {

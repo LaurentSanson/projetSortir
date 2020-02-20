@@ -31,12 +31,12 @@
             {{ form_row(sortieForm.descriptionInfos) }}
             {{ form_row(sortieForm.lieu) }}
             <div class="text-right">
-                <button><a href="{{ path('nouveauLieu') }}">Ajouter un lieu</a></button>
+                <a class="btn btn-secondary btn-sm" href="{{ path('nouveauLieu') }}">Ajouter un lieu</a>
             </div>
         </div>
         <div class="text-center">
-            <button type="submit" name="enregistrer">Enregister</button>
-            <button type="submit" name="publier">Publier la sortie</button>
+            <button class="btn btn-secondary" type="submit" name="enregistrer">Enregister</button>
+            <button class="btn btn-secondary" type="submit" name="publier">Publier la sortie</button>
             {{ form_end(sortieForm) }}
         </div>
     </div>

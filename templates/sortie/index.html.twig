@@ -6,10 +6,8 @@
 
     <h1>Gérer les sorties</h1>
     <div class="button-group">
-        <button type="button" class="btn btn-outline-secondary"><a href="{{ path('nouvelleSortie') }}"
-                                                                   style="color: black">Ajouter une
-                sortie</a>
-        </button>
+   <a class="btn btn-secondary" href="{{ path('nouvelleSortie') }}">Ajouter une sortie</a>
+
         <p>Filtrer les sorties</p>
     </div>
     <form method="GET" action="{{ path('sortieTriee') }}">
@@ -49,7 +47,7 @@
             </div>
 
             <div>
-                <button type="submit">Rechercher</button>
+                <button class="btn btn-secondary" type="submit">Rechercher</button>
             </div>
         </div>
     </form>
@@ -59,7 +57,7 @@
             <th scope="col">Nom de la sortie</th>
             <th scope="col">Date de la sortie</th>
             <th scope="col" class="display-tbl">Clôture</th>
-            <th scope="col" class="display-tbl">Inscrits/Places</th>
+            <th scope="col" class="display-tbl">Inscrits</th>
             <th scope="col" class="display-tbl">Etat</th>
             <th scope="col" class="display-tbl">Inscrit</th>
             <th scope="col" class="display-tbl">Organisateur</th>
@@ -105,20 +103,20 @@
                             {% if (sortie.etat.libelle != "ouverte") %}
                             {% else %}
                                 {% if inscrit == 1 %}
-                                    <a href="#" style="color: darkcyan"
+                                    <a class="btn btn-secondary btn-sm" href="#"
                                        onclick=" $.ajax('{{ path('desinscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">Se
                                         desinscrire</a>
                                 {% else %}
                                     {% if sortie.participants.count < sortie.nbInscriptionsMax %}
-                                        <a href="#" style="color: darkcyan"
+                                        <a  class="btn btn-secondary btn-sm" href="#"
                                            onclick=" $.ajax('{{ path('inscription', {'id':sortie.id}) }}').done(function(){location.reload()}); ">S'inscrire</a>
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
 
                             {% if user.id == sortie.organisateur.id and (sortie.etat == "ouverte" or sortie.etat == "Crée") %}
-                                <a href="{{ path('modification', {'id':sortie.id}) }}"
-                                   style="color: darkcyan">Modifier</a>
+                                <a class="btn btn-secondary btn-sm" href="{{ path('modification', {'id':sortie.id}) }}"
+                                   >Modifier</a>
 
                             {% endif %}
                             {% if is_granted('ROLE_ADMIN') and (sortie.etat == "ouverte" or sortie.etat == "Crée") %}
