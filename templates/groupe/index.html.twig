@@ -18,16 +18,16 @@
         </tr>
         </thead>
         <tbody>
-
         {% for groupe in groupes %}
+            {% if groupe.createur == app.user %}
             <tr>
                 <td><a href="{{ path('detailGroupe', {id:groupe.id}) }}">{{ groupe.nom }}</a></td>
                 <td>
                     <button class="delete btn btn-outline-dark" value="{{ groupe.id }}" type="submit">Supprimer</button>
                     <button value="{{ groupe.id }}" class="btn btn-outline-dark"><a href="{{path('ajouterParticipant', {'id':groupe.id})}}">Ajouter des participants</a></button>
                 </td>
-
             </tr>
+            {% endif %}
         {% endfor %}
         </tbody>
     </table>

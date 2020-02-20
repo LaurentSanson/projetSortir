@@ -20,7 +20,6 @@ class GroupeController extends AbstractController
      */
     public function index(EntityManagerInterface $em)
     {
-
         $groupeRepository = $em->getRepository(Groupe::class);
         $groupes = $groupeRepository->findAll();
         return $this->render('groupe/index.html.twig', [
@@ -36,10 +35,12 @@ class GroupeController extends AbstractController
      */
     public function nouveauGroupe(EntityManagerInterface $em, Request $request)
     {
+        $user = $this->getUser();
         $groupe = new Groupe();
         $groupeForm = $this->createForm(GroupeType::class, $groupe);
         $groupeForm->handleRequest($request);
         if ($groupeForm->isSubmitted() && $groupeForm->isValid()) {
+            $groupe->setCreateur($user);
             $em->persist($groupe);
             $em->flush();
             $this->addFlash("success", "Votre groupe a bien été ajouté !");
