@@ -62,7 +62,6 @@ class SortieController extends AbstractController
             }
         }
 
-
         $user = $this->getUser();
         $site = $request->get('site');
         $search = $request->get('search');
@@ -85,6 +84,7 @@ class SortieController extends AbstractController
             'sites' => $sites,
             'user' => $user
         ]);
+
     }
 
     /**
@@ -298,7 +298,7 @@ class SortieController extends AbstractController
         $repo = $em->getRepository(Sortie::class);
         $sortie = $repo->find($id);
 
-        $form = $this->createForm(SortieType::class, $sortie);
+        $form = $this->createForm(SortieType::class, $sortie, array('user' => $this->getUser()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

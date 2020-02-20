@@ -45,7 +45,7 @@ class ParticipantController extends AbstractController
      */
     public function profil(EntityManagerInterface $entityManager, Request $request, $id = null)
     {
-
+        // Si le user n'est pas connecté, il n'a pas accès à la page profil
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         if ($id == null) {
@@ -70,7 +70,7 @@ class ParticipantController extends AbstractController
      */
     public function modifierProfil(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
-
+        // Si le user n'est pas connecté, il n'a pas accès à la page modifier
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $participant = $this->getUser();
@@ -79,31 +79,25 @@ class ParticipantController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            dump('ok');
-
             $password = $form->get('newPassword')->getViewData();
             $password2 = $form->get('newPassword2')->getViewData();
             $photo = $form->get('photo')->getData();
             if ($photo) {
-
                 $originalFilename = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
+                // On inclut le nom du fichier à l'URL
                 $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $photo->guessExtension();
 
-                // Move the file to the directory where brochures are stored
+                // On enregistre le fichier dans le dossier demandé
                 try {
                     $photo->move(
                         $this->getParameter('photo_directory'),
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+
                 }
 
-                // updates the 'brochureFilename' property to store the PDF file name
-                // instead of its contents
                 $participant->setPhoto($newFilename);
             }
 
@@ -155,6 +149,7 @@ class ParticipantController extends AbstractController
      */
     public function listerParticipants(EntityManagerInterface $em)
     {
+        // Uniquement un user 'ADMIN' peut accéder à cette page
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $participantsRepo = $em->getRepository(Participant::class);
         $participants = $participantsRepo->findAll();
@@ -236,25 +231,6 @@ class ParticipantController extends AbstractController
         return $this->render("participant/enregistrerFichier.html.twig", [
             'form' => $form->createView(),
         ]);
-
-
-        // code pour encoder
-//        $encoders = [new CsvEncoder(), new JsonEncoder(), new XmlEncoder()];
-//        $normalizers = [new ObjectNormalizer()];
-//        $serializer = new Serializer($normalizers, $encoders);
-//
-//        $userCsv = $serializer->serialize($listUser, 'csv');
-//        dump($userCsv);
-//
-//        $Users = $serializer->decode($listUser, 'csv');
-//
-//        foreach ($Users as $user) {
-//            $userObj = $serializer->denormalize($user, Util::class);
-//            $partcipant = new Participant();
-//            $partcipant->setPseudo($userObj->getNom());
-//            $partcipant->setPrenom($userObj->getPrenom());
-//            $partcipant->setMail($userObj->getEmail());
-//        }
     }
 
 
@@ -266,6 +242,7 @@ class ParticipantController extends AbstractController
      */
     public function desactiver($id, EntityManagerInterface $em)
     {
+        // Uniquement un user 'ADMIN' peut accéder à cette page
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $participantsRepo = $em->getRepository(Participant::class);
         $participant = $participantsRepo->find($id);
@@ -287,7 +264,7 @@ class ParticipantController extends AbstractController
      */
     public function activer($id, EntityManagerInterface $em)
     {
-
+        // Uniquement un user 'ADMIN' peut accéder à cette page
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $participantsRepo = $em->getRepository(Participant::class);
@@ -309,7 +286,7 @@ class ParticipantController extends AbstractController
      */
     public function supprimerParticipant($id, EntityManagerInterface $em)
     {
-
+        // Uniquement un user 'ADMIN' peut accéder à cette page
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $participant = $em->getRepository(Participant::class)->find($id);

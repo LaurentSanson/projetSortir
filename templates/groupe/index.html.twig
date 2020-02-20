@@ -38,12 +38,12 @@
 
     <script type="text/javascript">
         $(".delete").click(function () {
-            if (confirm("Etes vous sur de vouloir supprimer ce lieu ?")) {
+            if (confirm("Etes vous sur de vouloir supprimer ce groupe ?")) {
                 $.ajax({
-                    url: "/deleteZone/" + $(this).val(),
+                    url: "/effacerGroupe/" + $(this).val(),
                 })
                     .done(function () {
-                        alert("Votre zone a bien été effacée !");
+                        alert("Votre groupe a bien été effacé !");
                         location.reload()
                     })
             }

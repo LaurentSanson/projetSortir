@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Groupe;
 use App\Entity\Participant;
+use App\Entity\Sortie;
 use App\Form\GroupeType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,7 +41,10 @@ class GroupeController extends AbstractController
         $groupeForm = $this->createForm(GroupeType::class, $groupe);
         $groupeForm->handleRequest($request);
         if ($groupeForm->isSubmitted() && $groupeForm->isValid()) {
+            // On set le créateur au User
             $groupe->setCreateur($user);
+            // On ajoute automatiquement le User au groupe
+            $groupe->addParticipant($user);
             $em->persist($groupe);
             $em->flush();
             $this->addFlash("success", "Votre groupe a bien été ajouté !");
@@ -69,13 +73,22 @@ class GroupeController extends AbstractController
 
     /**
      *
-     * @Route("/effacer/{id}", name="effacer")
+     * @Route("/effacerGroupe/{id}", name="effacerGroupe")
      */
     public function effacer(EntityManagerInterface $em, $id)
     {
-        $groupe = $this->getDoctrine()->getManager()
-            ->getRepository(Groupe::class)
-            ->find($id);
+        $groupe =$em->getRepository(Groupe::class)->find($id);
+        // On vient récupérer les participants inscrits au groupe puis on les supprime du groupe
+        $participantsGroupe = $groupe->getParticipants();
+        foreach ($participantsGroupe as $participant) {
+            $groupe->removeParticipant($participant);
+        }
+        // On vient récupérer les sorties rattachées au groupe puis on les supprime la relation
+        // La sortie est donc publique
+        $sorties = $em->getRepository(Sortie::class)->findByGroupe($groupe);
+        foreach ($sorties as $sortie){
+            $groupe->removeSortie($sortie);
+        }
 
         $em->remove($groupe);
         $em->flush();
@@ -99,8 +112,10 @@ class GroupeController extends AbstractController
      */
     public function ajouterParticipant(EntityManagerInterface $em, Request $request, $id=0)
     {
+        // On cherche le groupe
         $groupeRepository = $em->getRepository(Groupe::class);
         $groupe = $groupeRepository->find($id);
+        // On liste les participants selon les caractères de la barre de recherche
         $search = $request->get('search');
         $participantRepository = $em->getRepository(Participant::class);
         $participants = $participantRepository->search($search);
