@@ -9,15 +9,16 @@
     <h3>Modifier une sortie</h3>
     <div>
         {{ form_start(sortieForm) }}
-            {{ form_row(sortieForm.nom) }}
-            {{ form_row(sortieForm.dateDebut) }}
-            {{ form_row(sortieForm.duree) }}
-            {{ form_row(sortieForm.dateCloture) }}
-            {{ form_row(sortieForm.nbInscriptionsMax) }}
-            {{ form_row(sortieForm.descriptionInfos) }}
-            {{ form_row(sortieForm.lieu) }}
+        {{ form_row(sortieForm.nom) }}
+        {{ form_row(sortieForm.dateDebut) }}
+        {{ form_row(sortieForm.duree) }}
+        {{ form_row(sortieForm.dateCloture) }}
+        {{ form_row(sortieForm.nbInscriptionsMax) }}
+        {{ form_row(sortieForm.descriptionInfos) }}
+        {{ form_row(sortieForm.lieu) }}
+        {{ form_row(sortieForm._token) }}
         <button class="btn btn-secondary" type="submit">Modifier</button>
-        {{ form_end(sortieForm) }}
+        {{ form_end(sortieForm, {'render_rest': false}) }}
     </div>
     <br>
     <div class="annuler">

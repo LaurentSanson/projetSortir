@@ -63,6 +63,14 @@ class SortieRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function findByGroupe($groupe){
+        $qb = $this->createQueryBuilder('s');
+        $qb->andWhere('s.groupe = :groupe')
+            ->setParameter('groupe', $groupe);
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
 
     // /**
     //  * @return Sortie[] Returns an array of Sortie objects

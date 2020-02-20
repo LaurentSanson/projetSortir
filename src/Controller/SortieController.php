@@ -84,6 +84,7 @@ class SortieController extends AbstractController
             'sites' => $sites,
             'user' => $user
         ]);
+
     }
 
     /**
