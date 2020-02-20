@@ -28,6 +28,10 @@ class ParticipantController extends AbstractController
      */
     public function index()
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         return $this->render('participant/index.html.twig', [
@@ -45,6 +49,10 @@ class ParticipantController extends AbstractController
      */
     public function profil(EntityManagerInterface $entityManager, Request $request, $id = null)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         // Si le user n'est pas connecté, il n'a pas accès à la page profil
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -70,6 +78,10 @@ class ParticipantController extends AbstractController
      */
     public function modifierProfil(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         // Si le user n'est pas connecté, il n'a pas accès à la page modifier
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -149,6 +161,10 @@ class ParticipantController extends AbstractController
      */
     public function listerParticipants(EntityManagerInterface $em)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         // Uniquement un user 'ADMIN' peut accéder à cette page
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $participantsRepo = $em->getRepository(Participant::class);
@@ -169,6 +185,10 @@ class ParticipantController extends AbstractController
      */
     public function extraireFichierCsv(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $user = new Participant();
 
         $form = $this->createForm(FichierCsvType::class);
@@ -242,6 +262,10 @@ class ParticipantController extends AbstractController
      */
     public function desactiver($id, EntityManagerInterface $em)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         // Uniquement un user 'ADMIN' peut accéder à cette page
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $participantsRepo = $em->getRepository(Participant::class);
@@ -264,6 +288,10 @@ class ParticipantController extends AbstractController
      */
     public function activer($id, EntityManagerInterface $em)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         // Uniquement un user 'ADMIN' peut accéder à cette page
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -286,6 +314,10 @@ class ParticipantController extends AbstractController
      */
     public function supprimerParticipant($id, EntityManagerInterface $em)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         // Uniquement un user 'ADMIN' peut accéder à cette page
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 

@@ -74,8 +74,13 @@ class SortieController extends AbstractController
 
         $sorties = $em->getRepository(Sortie::class)->search($site, $search, $dateDebut, $dateFin, $checkbox1, $checkbox2, $checkbox3, $checkbox4, $user);
         $sites = $em->getRepository(Site::class)->findAll();
-        if ($checkbox2 && $checkbox3){
+        if ($checkbox2 && $checkbox3) {
             $this->addFlash('danger', 'Vous ne pouvez pas sélectionner les sorties auxquelles vous êtes inscrit et non inscrit...');
+        }
+
+        if (!$user) {
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
         }
 
 
@@ -95,13 +100,19 @@ class SortieController extends AbstractController
      * @throws Exception
      */
     public function nouvelleSortie(EntityManagerInterface $em, Request $request)
-    {  $createur = $this->getUser();
+    {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
+        $createur = $this->getUser();
         $sortie = new Sortie();
         $sortieForm = $this->createForm(SortieType::class, $sortie, array('user' => $createur));
         $sortieForm->handleRequest($request);
 
         $groupeRepository = $em->getRepository(Groupe::class);
         $groupes = $groupeRepository->findBy(['Createur' => $createur]);
+
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
@@ -123,12 +134,11 @@ class SortieController extends AbstractController
             $sortie->setOrganisateur($user);
             $sortie->setSite($site);
             $dateDuJour = new \DateTime('now');
-            if ($sortie->getDateDebut() < $dateDuJour){
+            if ($sortie->getDateDebut() < $dateDuJour) {
                 $this->addFlash('danger', "La date de l'évènement doit être supérieure à la date du jour");
-            }
-            elseif ($sortie->getDateCloture() > $sortie->getDateDebut()){
+            } elseif ($sortie->getDateCloture() > $sortie->getDateDebut()) {
                 $this->addFlash('danger', 'La date de clôture ne peut pas être supérieure à la date de sortie');
-            } else{
+            } else {
                 $em->persist($sortie);
                 $em->flush();
                 $this->addFlash("success", "Votre sortie a bien été ajoutée !");
@@ -137,6 +147,8 @@ class SortieController extends AbstractController
             }
 
         }
+
+
         return $this->render('sortie/ajouter.html.twig', [
             'sortieForm' => $sortieForm->createView(),
             'groupes' => $groupes
@@ -149,6 +161,10 @@ class SortieController extends AbstractController
      */
     public function publierSortie($id, EntityManagerInterface $em)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $repo = $em->getRepository(Sortie::class);
         $sortie = $repo->find($id);
 
@@ -171,6 +187,10 @@ class SortieController extends AbstractController
      */
     public function detail($id)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $sortie = $this->getDoctrine()->getManager()
             ->getRepository(Sortie::class)
             ->find($id);
@@ -215,6 +235,10 @@ class SortieController extends AbstractController
     public
     function delete(EntityManagerInterface $em, $id)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $sortie = $this->getDoctrine()->getManager()
             ->getRepository(Sortie::class)
             ->find($id);
@@ -240,7 +264,10 @@ class SortieController extends AbstractController
      */
     public function inscriptionSortie($id, EntityManagerInterface $entityManager)
     {
-
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $user = $this->getUser();
 
         $repo = $entityManager->getRepository(Sortie::class);
@@ -271,6 +298,10 @@ class SortieController extends AbstractController
      */
     public function desinscription($id, EntityManagerInterface $entityManager)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $user = $this->getUser();
         $repo = $entityManager->getRepository(Sortie::class);
         $sortie = $repo->find($id);
@@ -295,6 +326,10 @@ class SortieController extends AbstractController
      */
     public function modifierSortie($id, EntityManagerInterface $em, Request $request)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $repo = $em->getRepository(Sortie::class);
         $sortie = $repo->find($id);
 
@@ -321,6 +356,10 @@ class SortieController extends AbstractController
      */
     public function annulerSortie($id, EntityManagerInterface $em, Request $request)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $repo = $em->getRepository(Sortie::class);
         $sortie = $repo->find($id);
 

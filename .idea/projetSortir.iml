@@ -45,6 +45,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/ralouphie/getallheaders" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sensio/framework-extra-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/swiftmailer/swiftmailer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/apache-pack" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/asset" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/cache-contracts" />
@@ -112,5 +113,6 @@
     <orderEntry type="library" name="jquery-3.4.1.slim" level="application" />
     <orderEntry type="library" name="bootstrap" level="application" />
     <orderEntry type="library" name="jquery-3.4.1" level="application" />
+    <orderEntry type="module" module-name="testSylius" />
   </component>
 </module>

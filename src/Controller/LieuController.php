@@ -16,6 +16,10 @@ class LieuController extends AbstractController
      */
     public function index(EntityManagerInterface $em)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $lieuRepository = $em->getRepository(Lieu::class);
         $lieux = $lieuRepository->findAll();
         return $this->render('lieu/index.html.twig', [
@@ -28,6 +32,10 @@ class LieuController extends AbstractController
      */
     public function nouvelleSortie(EntityManagerInterface $em, Request $request)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $lieu = new Lieu();
         $lieuForm = $this->createForm(LieuType::class, $lieu);
         $lieuForm->handleRequest($request);
@@ -47,6 +55,10 @@ class LieuController extends AbstractController
      */
     public function detail($id)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $lieu = $this->getDoctrine()->getManager()
             ->getRepository(Lieu::class)
             ->find($id);
@@ -65,6 +77,10 @@ class LieuController extends AbstractController
      */
     public function effacer(EntityManagerInterface $em, $id)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $lieu = $this->getDoctrine()->getManager()
             ->getRepository(Lieu::class)
             ->find($id);
