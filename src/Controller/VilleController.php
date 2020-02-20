@@ -20,6 +20,10 @@ class VilleController extends AbstractController
      */
     public function index(EntityManagerInterface $em)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $villeRepository = $em->getRepository(Ville::class);
         $villes = $villeRepository->findAll();
         return $this->render('ville/index.html.twig', [
@@ -32,7 +36,10 @@ class VilleController extends AbstractController
      */
     public function nouvelleVille(EntityManagerInterface $em, Request $request)
     {
-
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $ville = new Ville();
         $villeForm = $this->createForm(VilleType::class, $ville);
         $villeForm->handleRequest($request);
@@ -55,6 +62,10 @@ class VilleController extends AbstractController
      */
     public function detail($id)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $ville = $this->getDoctrine()->getManager()
             ->getRepository(Ville::class)
             ->find($id);
@@ -73,6 +84,10 @@ class VilleController extends AbstractController
      */
     public function delete(EntityManagerInterface $em, $id)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $ville = $this->getDoctrine()->getManager()
             ->getRepository(Ville::class)
             ->find($id);

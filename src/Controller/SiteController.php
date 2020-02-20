@@ -16,6 +16,10 @@ class SiteController extends AbstractController
      */
     public function index(EntityManagerInterface $em)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $siteRepository = $em->getRepository(Site::class);
         $sites = $siteRepository->findAll();
         return $this->render('site/index.html.twig', [
@@ -28,6 +32,10 @@ class SiteController extends AbstractController
      */
     public function nouveauSite(EntityManagerInterface $em, Request $request)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $site = new Site();
         $siteForm = $this->createForm(SiteType::class, $site);
         $siteForm->handleRequest($request);
@@ -47,6 +55,10 @@ class SiteController extends AbstractController
      */
     public function detail($id)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $site = $this->getDoctrine()->getManager()
             ->getRepository(Site::class)
             ->find($id);
@@ -65,6 +77,10 @@ class SiteController extends AbstractController
      */
     public function delete(EntityManagerInterface $em, $id)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $site = $this->getDoctrine()->getManager()
             ->getRepository(Site::class)
             ->find($id);

@@ -12,6 +12,7 @@
         "mailjet/mailjet-apiv3-php": "^1.4",
         "mailjet/mailjet-swiftmailer": "^2.0",
         "sensio/framework-extra-bundle": "^5.5",
+        "symfony/apache-pack": "^1.0",
         "symfony/asset": "5.0.*",
         "symfony/console": "5.0.*",
         "symfony/debug-pack": "^1.0",
@@ -78,7 +79,7 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": true,
             "require": "5.0.*"
         }
     }

@@ -21,6 +21,10 @@ class GroupeController extends AbstractController
      */
     public function index(EntityManagerInterface $em)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $groupeRepository = $em->getRepository(Groupe::class);
         $groupes = $groupeRepository->findAll();
         return $this->render('groupe/index.html.twig', [
@@ -36,6 +40,10 @@ class GroupeController extends AbstractController
      */
     public function nouveauGroupe(EntityManagerInterface $em, Request $request)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $user = $this->getUser();
         $groupe = new Groupe();
         $groupeForm = $this->createForm(GroupeType::class, $groupe);
@@ -60,6 +68,10 @@ class GroupeController extends AbstractController
      */
     public function detail($id)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $groupe = $this->getDoctrine()->getManager()
             ->getRepository(Groupe::class)
             ->find($id);
@@ -77,6 +89,10 @@ class GroupeController extends AbstractController
      */
     public function effacer(EntityManagerInterface $em, $id)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $groupe =$em->getRepository(Groupe::class)->find($id);
         // On vient récupérer les participants inscrits au groupe puis on les supprime du groupe
         $participantsGroupe = $groupe->getParticipants();
@@ -112,6 +128,10 @@ class GroupeController extends AbstractController
      */
     public function ajouterParticipant(EntityManagerInterface $em, Request $request, $id=0)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         // On cherche le groupe
         $groupeRepository = $em->getRepository(Groupe::class);
         $groupe = $groupeRepository->find($id);
@@ -133,6 +153,10 @@ class GroupeController extends AbstractController
      */
     public function inscriptionGroupe($idGroupe, $idUser, EntityManagerInterface $entityManager)
     {
+        if (!$this->getUser()){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+            return $this->redirectToRoute('main');
+        }
         $repo = $entityManager->getRepository(Groupe::class);
         $groupe = $repo->find($idGroupe);
         $user = $entityManager->getRepository(Participant::class)->find($idUser);
