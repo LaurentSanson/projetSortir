@@ -161,12 +161,11 @@ class ParticipantController extends AbstractController
      */
     public function listerParticipants(EntityManagerInterface $em)
     {
-        if (!$this->getUser()){
-            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+        // Uniquement un user 'ADMIN' peut accéder à cette page
+        if (!$this->getUser()->getRoles() != ['ROLE_ADMIN', 'ROLE_USER']){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté  en tant qu'admin");
             return $this->redirectToRoute('main');
         }
-        // Uniquement un user 'ADMIN' peut accéder à cette page
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $participantsRepo = $em->getRepository(Participant::class);
         $participants = $participantsRepo->findAll();
 
@@ -185,8 +184,9 @@ class ParticipantController extends AbstractController
      */
     public function extraireFichierCsv(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
     {
-        if (!$this->getUser()){
-            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+        // Uniquement un user 'ADMIN' peut accéder à cette page
+        if (!$this->getUser()->getRoles() != ['ROLE_ADMIN', 'ROLE_USER']){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté  en tant qu'admin");
             return $this->redirectToRoute('main');
         }
         $user = new Participant();
@@ -262,8 +262,9 @@ class ParticipantController extends AbstractController
      */
     public function desactiver($id, EntityManagerInterface $em)
     {
-        if (!$this->getUser()){
-            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+        // Uniquement un user 'ADMIN' peut accéder à cette page
+        if (!$this->getUser()->getRoles() != ['ROLE_ADMIN', 'ROLE_USER']){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté en tant qu'admin");
             return $this->redirectToRoute('main');
         }
         // Uniquement un user 'ADMIN' peut accéder à cette page
@@ -288,8 +289,9 @@ class ParticipantController extends AbstractController
      */
     public function activer($id, EntityManagerInterface $em)
     {
-        if (!$this->getUser()){
-            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+        // Uniquement un user 'ADMIN' peut accéder à cette page
+        if (!$this->getUser()->getRoles() != ['ROLE_ADMIN', 'ROLE_USER']){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté  en tant qu'admin");
             return $this->redirectToRoute('main');
         }
         // Uniquement un user 'ADMIN' peut accéder à cette page
@@ -314,12 +316,11 @@ class ParticipantController extends AbstractController
      */
     public function supprimerParticipant($id, EntityManagerInterface $em)
     {
-        if (!$this->getUser()){
-            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté");
+        // Uniquement un user 'ADMIN' peut accéder à cette page
+        if (!$this->getUser()->getRoles() != ['ROLE_ADMIN', 'ROLE_USER']){
+            $this->addFlash('danger', "Vous ne pouvez pas accéder à cette page si vous n'êtes pas connecté en tant qu'admin");
             return $this->redirectToRoute('main');
         }
-        // Uniquement un user 'ADMIN' peut accéder à cette page
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $participant = $em->getRepository(Participant::class)->find($id);
 
