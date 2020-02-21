@@ -45,7 +45,7 @@ class VilleController extends AbstractController
         $villeForm->handleRequest($request);
 
 
-        if ($villeForm->isSubmitted() && $villeForm->isValid() ) {
+        if ($villeForm->isSubmitted()) {
             $ville->setNom($_POST['ville']['nom']);
             $em->persist($ville);
             $em->flush();

@@ -28,17 +28,15 @@
         </thead>
         <tbody>
         {% for participant in participants %}
-        <tr>
-            <td>{{ participant.pseudo }}</td>
-            <td>
-                <button type="submit" class="btn btn-secondary">
-                    <a href="#" style="color: darkcyan"
+            <tr>
+                <td>{{ participant.pseudo }}</td>
+                <td>
+                    <a href="#" class="btn btn-secondary"
                        onclick=" $.ajax('{{ path('inscriptionGroupe', {idUser: participant.id, idGroupe: groupe.id}) }}').done(function(){location.reload()}); ">Ajouter
                         au groupe</a>
-                </button>
-            </td>
+                </td>
 
-        </tr>
+            </tr>
         {% endfor %}
         </tbody>
     </table>

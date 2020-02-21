@@ -10,8 +10,8 @@
     <div>
         {{ form_start(lieuForm) }}
         {{ form_widget(lieuForm) }}
-        <button type="submit">Valider</button>
-        <button type="submit"><a href="{{ path('nouvelleVille') }}">Ajouter une ville</a></button>
+        <button type="submit" class="btn btn-secondary">Valider</button>
+        <a href="{{ path('nouvelleVille') }}" class="btn btn-secondary">Ajouter une ville</a>
         {{ form_end(lieuForm) }}
     </div>
 
